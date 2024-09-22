@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "c790cabd37a5c739",
+    "type": "split",
+    "children": [
+      {
+        "id": "5f1dd9d9f0badfaa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d74d3d6e419358e2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "products_db.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ede84c53c69d1285",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "product_types.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "d5b1cfe902d94ff4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ProductTypes DB.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "559d76fe6ac5f3aa",
+    "type": "split",
+    "children": [
+      {
+        "id": "81097a9131233a2c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8b7ab2970bb1d07f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "7a5675dc4e5170bb",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "45542aa776dc1bdc",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "4da6587d10ed6a6f",
+    "type": "split",
+    "children": [
+      {
+        "id": "31c49434435f3d3b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "353623f71827a1b9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "ProductTypes DB.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5bb1f631e65adfcd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "ProductTypes DB.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "47a81f60216459e2",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "6e1be8e971988305",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "ProductTypes DB.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "d5b1cfe902d94ff4",
+  "lastOpenFiles": [
+    "product_types.md",
+    "GG Digital Printing App.canvas",
+    "Products DB.md",
+    "products_db.md",
+    "ProductTypes DB.md",
+    "product_prices.md",
+    "ProductPrices DB.md",
+    "Products.md",
+    "logistics.md",
+    "Logistics DB.md",
+    "Orders.md",
+    "2024-09-17.md",
+    "order_status.md",
+    "OrderStatus DB.md",
+    "selling_platform.md",
+    "SellingPlatform DB.md",
+    "Django Model.canvas",
+    "Expenses.md",
+    "Database SQL.md",
+    "Django Apps.md",
+    "Django Model Meta.md",
+    "Django Foreign Key on_delete Option.md",
+    "Django Model Fields.md",
+    "Share Holders.md",
+    "Sites.md",
+    "Reserved Money.md",
+    "Clients.md",
+    "GG Digital Printing App"
+  ]
+}

@@ -1,0 +1,4 @@
+- Database
+	- share_holders
+	- not_claimed_income
+	- money_sent_to_printer_investors

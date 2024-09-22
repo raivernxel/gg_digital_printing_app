@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+      {% block title %}
+        GG Digital Printing
+      {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <nav>
+        <a href="/">
+            <span role="img" aria-label="Home" title="Home">🏠</span>
+        </a> |
+        <a href="/products/prices">
+            <span role="img" aria-label="About" title="prices">Prices</span>
+        </a> |
+        <a href="/products/product_information">
+            <span role="img" aria-label="About" title="product_information">Product Information</span>
+        </a> |
+        <a href="/orders/insert-products">
+            <span role="img" aria-label="About" title="insert_products">Insert Products</span>
+        </a>
+  </nav>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>

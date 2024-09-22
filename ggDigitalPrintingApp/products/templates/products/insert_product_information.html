@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Insert Product Information
+{% endblock %}
+
+{% block content %}
+    <h2>Upload CSV File</h2>
+    {% if request.method == 'GET' %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="csv_file" accept=".csv" required>
+            <button type="submit">Upload</button>
+        </form>
+    {% else %}
+        <textarea rows="5" cols="50" id="multiLineInput">{{ insert_query }}</textarea>
+    {% endif %}
+{% endblock %}
