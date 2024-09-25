@@ -11,40 +11,18 @@
             "id": "d74d3d6e419358e2",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "canvas",
               "state": {
-                "file": "products_db.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "ede84c53c69d1285",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "product_types.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "d5b1cfe902d94ff4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "ProductTypes DB.md",
-                "mode": "source",
-                "source": false
+                "file": "GG Digital Printing App.canvas",
+                "viewState": {
+                  "x": 60,
+                  "y": -140,
+                  "zoom": 0
+                }
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -110,7 +88,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ProductTypes DB.md",
+                "file": "GG Digital Printing App.canvas",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +105,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ProductTypes DB.md",
+                "file": "GG Digital Printing App.canvas",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +128,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ProductTypes DB.md"
+                "file": "GG Digital Printing App.canvas"
               }
             }
           }
@@ -171,24 +149,27 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d5b1cfe902d94ff4",
+  "active": "d74d3d6e419358e2",
   "lastOpenFiles": [
-    "product_types.md",
+    "product_information.md",
+    "Product Information DB.md",
     "GG Digital Printing App.canvas",
-    "Products DB.md",
-    "products_db.md",
-    "ProductTypes DB.md",
+    "Product Information Data.csv",
     "product_prices.md",
     "ProductPrices DB.md",
-    "Products.md",
+    "product_types.md",
+    "ProductTypes DB.md",
+    "products_db.md",
+    "Products DB.md",
     "logistics.md",
     "Logistics DB.md",
-    "Orders.md",
-    "2024-09-17.md",
-    "order_status.md",
-    "OrderStatus DB.md",
     "selling_platform.md",
     "SellingPlatform DB.md",
+    "order_status.md",
+    "OrderStatus DB.md",
+    "Products.md",
+    "Orders.md",
+    "2024-09-17.md",
     "Django Model.canvas",
     "Expenses.md",
     "Database SQL.md",
@@ -199,7 +180,6 @@
     "Share Holders.md",
     "Sites.md",
     "Reserved Money.md",
-    "Clients.md",
     "GG Digital Printing App"
   ]
 }

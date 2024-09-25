@@ -9,6 +9,7 @@ class ProductTypes(models.Model):
     class Meta:
         db_table = 'product_types'
 
+
 class Products(models.Model):
     product_type = models.CharField(max_length=20)
     variation_1 = models.CharField(max_length=20)
@@ -20,9 +21,10 @@ class Products(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=('product_type','variation_1','variation_2'), name='unique_product_name')
+            UniqueConstraint(fields=('product_type', 'variation_1', 'variation_2'), name='unique_product_name')
         ]
         db_table = 'products'
+
 
 class ProductPrices(models.Model):
     _product_name = models.CharField(unique=True, max_length=200)
@@ -46,9 +48,10 @@ class ProductPrices(models.Model):
     class Meta:
         db_table = 'product_prices'
 
+
 class ProductInformation(models.Model):
     product_name = models.CharField(max_length=100, default="")
-    variation_name = models.CharField(max_length=50)
+    variation_name = models.CharField(max_length=50, blank=True)
     product_type = models.CharField(max_length=100)
     variation_1 = models.CharField(max_length=20)
     variation_2 = models.CharField(max_length=20)
@@ -56,10 +59,12 @@ class ProductInformation(models.Model):
     bundle_count = models.IntegerField(default=0)
 
     def clean(self):
-        if not Products.objects.filter(product_type=self.product_type, variation_1=self.variation_1, variation_2=self.variation_2).exists():
-            raise ValueError("No such product name in Product list!")
+        if not Products.objects.filter(product_type=self.product_type, variation_1=self.variation_1,
+                                       variation_2=self.variation_2).exists():
+            raise ValueError(f"No such product name in Product list! "
+                             f"{self.product_type}:{self.variation_1}:{self.variation_2}")
 
-    #Validate first before saving.
+    # Validate first before saving.
     def save(self, *args, **kwargs):
         self.full_clean()
         super(ProductInformation, self).save(*args, **kwargs)

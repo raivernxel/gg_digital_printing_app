@@ -44,5 +44,7 @@ VALUES
 ('Banner','100','60x45','front only'),
 ('Banner','100','90x60','front only'),
 ('Coaster','0','3mm','round'),
-('PlaymatCase','100',)
+('PlaymatCase','100','60x35','spandex'),
+('PlaymatCase','100','60x40','spandex'),
+('PlaymatCase','100','60x60','spandex')
 ```

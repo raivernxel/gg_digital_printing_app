@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .forms import OrderInformationForm
 import csv
 import io
 
@@ -40,3 +41,11 @@ def insert_products(request):
         return render(request, 'orders/insert_products.html', {'insert_query': insert_query})
 
     return render(request, 'orders/insert_products.html')
+
+
+def add_orders(request):
+    if request.method == 'POST':
+        form = OrderInformationForm(request.POST)
+    else:
+        form = OrderInformationForm()
+    return render(request, 'orders/add_orders.html', {'form': form})

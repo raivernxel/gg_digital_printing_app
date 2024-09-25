@@ -4,7 +4,7 @@ import io
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProductPricesForm
-from .models import Products
+from .models import Products, ProductInformation
 
 
 # Create your views here.
@@ -22,12 +22,14 @@ def product_prices(request):
         form = ProductPricesForm()
     return render(request, 'products/product_prices.html', {'form': form})
 
+
 def insert_product_information(request):
     if request.method == 'POST':
         # Get the uploaded file
         csv_file = request.FILES['csv_file']
         #insert_query = 'INSERT INTO products(product_type, stocks, variation_1, variation_2)\nVALUES\n'
-        insert_query = 'INSERT INTO product_information(product_name, variation_name, product_type, variation_1, variation_2)\nVALUES\n'
+        insert_query = ('INSERT INTO product_information(product_name, variation_name, product_type, variation_1, '
+                        'variation_2)\nVALUES\n')
 
         # Check if the uploaded file is a CSV
         if not csv_file.name.endswith('.csv'):
@@ -43,14 +45,19 @@ def insert_product_information(request):
         # Process the rows in the CSV
         for x, row in enumerate(reader):
             if x > 0:
-                insert_query += f"('{row[0]}','{row[1]}','{row[2]}','{row[3]}','{row[4]}'),\n"
-                product_name = {row[0]}
-                variation_name = {row[1]}
+                product_name = row[titles["Product Name"]]
+                variation_name = row[titles["Variation Name"]]
+                product_type = row[titles["Product Type"]]
+                variation_1 = row[titles["Variation 1"]]
+                variation_2 = row[titles["Variation 2"]]
+
+                product_info = ProductInformation(product_name=product_name, variation_name=variation_name,
+                                                  product_type=product_type, variation_1=variation_1,
+                                                  variation_2=variation_2)
+
+                product_info.save()
             else:
                 for y, col in enumerate(row):
                     titles[col] = y
-                    print(col, y)
-
-        return render(request, 'products/insert_product_information.html', {'insert_query': insert_query})
 
     return render(request, 'products/insert_product_information.html')

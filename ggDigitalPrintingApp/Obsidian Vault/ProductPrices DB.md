@@ -1,5 +1,5 @@
 ```
-INSERT INTO product_prices(product_name, material_price, price, price_last_update)
+INSERT INTO product_prices(_product_name, material_price, price, price_last_update)
 VALUES
 ('Mousepad:70x40:black','79.93','590','2024-01-01'),
 ('Banner:60x35:back2back','20','300','2024-01-01'),

@@ -1,6 +1,7 @@
 from django.db import models
 from products.models import ProductInformation
 
+
 # Create your models here.
 class Logistics(models.Model):
     logistic_name = models.CharField(unique=True, max_length=50)
@@ -8,17 +9,20 @@ class Logistics(models.Model):
     class Meta:
         db_table = 'logistics'
 
+
 class SellingPlatform(models.Model):
     platform = models.CharField(unique=True, max_length=20)
 
     class Meta:
         db_table = 'selling_platform'
 
+
 class OrderStatus(models.Model):
     status_type = models.CharField(unique=True, max_length=15)
 
     class Meta:
         db_table = 'order_status'
+
 
 class OrderFulfillment(models.Model):
     order_id = models.CharField(primary_key=True, max_length=20)
@@ -29,6 +33,7 @@ class OrderFulfillment(models.Model):
 
     class Meta:
         db_table = 'order_fulfillment'
+
 
 class OrderInformation(models.Model):
     order_id = models.CharField(primary_key=True, max_length=20)
@@ -54,6 +59,7 @@ class OrderInformation(models.Model):
     class Meta:
         db_table = 'order_information'
 
+
 class OrderList(models.Model):
     order_id = models.ForeignKey(OrderInformation, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100)
@@ -68,7 +74,7 @@ class OrderList(models.Model):
         if not ProductInformation.objects.filter(product_type=self.product_name, variation_name=self.variation_name).exists():
             raise ValueError("No such product in Product Information!")
 
-    #Validate first before saving.
+    # Validate first before saving.
     def save(self, *args, **kwargs):
         self.full_clean()
         super(OrderList, self).save(*args, **kwargs)
