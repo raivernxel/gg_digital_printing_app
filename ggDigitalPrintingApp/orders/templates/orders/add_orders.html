@@ -11,5 +11,11 @@
             {{ form }}
             <button>Add Order</button>
         </form>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="data_file" accept=".xlsx, .csv" required>
+            <button type="submit">Upload</button>
+        </form>
     </section>
 {% endblock %}
