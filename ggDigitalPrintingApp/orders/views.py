@@ -79,9 +79,12 @@ def add_orders(request):
                         city = data_dict['orders']['City'][x]
                         province = data_dict['orders']['Province'][x]
                         tracking_number = check_nan(str(data_dict['orders']['Tracking Number*'][x]))
-                        shipping_option = (data_dict['orders']['Shipping Option'][x]
-                                           .replace("Standard Local", "").replace("-", ""))
-                        order_status = data_dict['orders']['Order Status'][x]
+                        shipping_option = shipping_update(data_dict['orders']['Shipping Option'][x])
+
+                        order_status = "Delivered"
+                        if data_dict['orders']['Order Status'][x] != "Completed":
+                            order_status = data_dict['orders']['Order Status'][x]
+
                         cancel_reason = check_nan(str(data_dict['orders']['Cancel reason'][x]))
                         refund_status = check_nan(str(data_dict['orders']['Return / Refund Status'][x]))
                         platform = "SHOPEE"
@@ -105,24 +108,26 @@ def add_orders(request):
                     prev_order_id = order_id
 
                     product_name = data_dict['orders']['Product Name'][x]
-                    variation_name = data_dict['orders']['Variation Name'][x]
+                    variation_name = check_nan(str(data_dict['orders']['Variation Name'][x]))
                     original_price = data_dict['orders']['Original Price'][x]
                     deal_price = data_dict['orders']['Deal Price'][x]
                     quantity = data_dict['orders']['Quantity'][x]
                     returned_quantity = data_dict['orders']['Returned quantity'][x]
-                    sku = data_dict['orders']['Parent SKU Reference No.'][x]
+                    sku = check_nan(str(data_dict['orders']['Parent SKU Reference No.'][x]))
 
+                    existing_order = OrderList.objects.filter(
+                        order_id=order_id,
+                        product_name=product_name,
+                        variation_name=variation_name
+                    ).exists()
 
-
-                    print(product_name)
-                    print(variation_name)
-
-                    order_list = OrderList(order_id=order_information, product_name=product_name,
+                    if not existing_order:
+                        order_list = OrderList(order_id=order_information, product_name=product_name,
                                            variation_name=variation_name, original_price=original_price,
                                            deal_price=deal_price, quantity=quantity,
                                            returned_quantity=returned_quantity, sku=sku)
 
-                    order_list.save()
+                        order_list.save()
 
                     # print(data_dict['orders']['Order ID'][x])
                     # initial_data = {
@@ -167,5 +172,13 @@ def add_orders(request):
 def check_nan(field):
     if field == "nan":
         return ''
+
+    return field
+
+def shipping_update(field):
+    field = field.replace("Standard Local", "").replace("-", "")
+
+    if field == "":
+        field = "Others"
 
     return field

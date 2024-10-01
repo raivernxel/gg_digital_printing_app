@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 from products.models import ProductInformation
 
 
@@ -37,7 +38,7 @@ class OrderFulfillment(models.Model):
 
 class OrderInformation(models.Model):
     order_id = models.CharField(primary_key=True, max_length=20)
-    username = models.CharField(max_length=20)
+    username = models.CharField(max_length=30)
     delivery_address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=20, blank=True)
     province = models.CharField(max_length=20, blank=True)
@@ -63,16 +64,16 @@ class OrderInformation(models.Model):
 class OrderList(models.Model):
     order_id = models.ForeignKey(OrderInformation, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100)
-    variation_name = models.CharField(max_length=40)
+    variation_name = models.CharField(max_length=40, blank=True)
     original_price = models.DecimalField(max_digits=9, decimal_places=4, default=0)
     deal_price = models.DecimalField(max_digits=9, decimal_places=4, default=0)
     quantity = models.IntegerField()
     returned_quantity = models.IntegerField(default=0)
-    sku = models.CharField(max_length=255, null=True)
+    sku = models.CharField(max_length=255, null=True, blank=True)
 
     def clean(self):
-        if not ProductInformation.objects.filter(product_type=self.product_name, variation_name=self.variation_name).exists():
-            raise ValueError("No such product in Product Information!")
+        if not ProductInformation.objects.filter(product_name=self.product_name, variation_name=self.variation_name).exists():
+            raise ValueError(f"No such product in Product Information! {self.product_name} {self.variation_name}")
 
     # Validate first before saving.
     def save(self, *args, **kwargs):
@@ -80,4 +81,7 @@ class OrderList(models.Model):
         super(OrderList, self).save(*args, **kwargs)
 
     class Meta:
+        constraints = [
+            UniqueConstraint(fields=('order_id', 'product_name', 'variation_name'), name='unique_order_list')
+        ]
         db_table = 'order_list'
