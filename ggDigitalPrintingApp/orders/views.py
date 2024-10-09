@@ -131,9 +131,9 @@ def add_orders(request):
 
 
 def orders(request):
-    order_info = OrderInformation.objects.all()
+    order_info = OrderInformation.objects.all().order_by('order_creation_date')
     paginator = Paginator(order_info, 10)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
     order_list = {}
