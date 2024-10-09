@@ -1,53 +1,14 @@
 import pandas as pd
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
 from .forms import OrderInformationForm
 from .models import OrderInformation, Logistics, OrderStatus, SellingPlatform, OrderList
-from products.models import ProductInformation
 from datetime import datetime
-import csv
-import io
+import csv, io, math
 
 
 # Create your views here.
-def insert_products(request):
-    if request.method == 'POST':
-        # Get the uploaded file
-        csv_file = request.FILES['csv_file']
-        # insert_query = 'INSERT INTO products(product_type, stocks, variation_1, variation_2)\nVALUES\n'
-        insert_query = 'INSERT INTO product_prices(product_name, material_price, price, price_last_update)\nVALUES\n'
-
-        # Check if the uploaded file is a CSV
-        if not csv_file.name.endswith('.csv'):
-            return HttpResponse('This is not a CSV file.')
-
-        # Read the CSV file
-        data_set = csv_file.read().decode('UTF-8')
-        io_string = io.StringIO(data_set)
-        reader = csv.reader(io_string, delimiter=',', quotechar='"')
-
-        # Process the rows in the CSV
-        for x, row in enumerate(reader):
-            if x > 0:
-                product_name = f'{row[0]}:{row[7]}:{row[8]}'
-                insert_query += f"('{product_name}','{row[9]}','{row[5]}','2024-01-01'),\n"
-                # for y, col in enumerate(row):
-                #     if y == 0:
-                #         insert_query += "("
-                #
-                #     if y in (0, 6, 7, 8):
-                #         insert_query += f"'{col}'"
-                #
-                #         if y < 8:
-                #             insert_query += ","
-                #         else:
-                #             insert_query += "),\n"
-
-        return render(request, 'orders/insert_products.html', {'insert_query': insert_query})
-
-    return render(request, 'orders/insert_products.html')
-
-
 def add_orders(request):
     if request.method == 'POST':
         form = ""
@@ -166,7 +127,22 @@ def add_orders(request):
             form = OrderInformationForm(request.POST)
     else:
         form = OrderInformationForm()
-    return render(request, 'orders/add_orders.html', {'form': form})
+    return render(request, 'orders/add_orders.html', {'form': form, 'add_orders_menu': 'bg-gray-900 text-white'})
+
+
+def orders(request):
+    order_info = OrderInformation.objects.all()
+    paginator = Paginator(order_info, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    order_list = {}
+
+    for order in order_info:
+        order_list[order.order_id] = OrderList.objects.filter(order_id=order.order_id)
+
+    return render(request, 'orders/orders.html', {'orders_menu': 'bg-gray-900 text-white',
+                                                  'order_info': page_obj, 'order_list': order_list})
 
 
 def check_nan(field):

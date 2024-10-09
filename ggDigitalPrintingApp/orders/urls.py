@@ -4,6 +4,6 @@ from . import views
 app_name = 'orders'
 
 urlpatterns = [
-    path('insert-products/', views.insert_products),
+    path('', views.orders),
     path('add-order/', views.add_orders, name='add-order')
 ]
