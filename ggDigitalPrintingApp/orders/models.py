@@ -20,6 +20,7 @@ class SellingPlatform(models.Model):
 
 class OrderStatus(models.Model):
     status_type = models.CharField(unique=True, max_length=15)
+    color = models.CharField(max_length=10, default="green")
 
     class Meta:
         db_table = 'order_status'
