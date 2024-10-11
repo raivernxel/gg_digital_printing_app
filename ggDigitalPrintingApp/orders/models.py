@@ -70,6 +70,7 @@ class OrderList(models.Model):
     deal_price = models.DecimalField(max_digits=9, decimal_places=4, default=0)
     quantity = models.IntegerField()
     returned_quantity = models.IntegerField(default=0)
+    defect_quantity = models.IntegerField(default=0)
     sku = models.CharField(max_length=255, null=True, blank=True)
 
     def clean(self):
