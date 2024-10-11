@@ -5,7 +5,9 @@ from django.shortcuts import render
 from .forms import OrderInformationForm
 from .models import OrderInformation, Logistics, OrderStatus, SellingPlatform, OrderList
 from datetime import datetime
-import csv, io, math
+from decouple import config
+from api.services import get_trello_api_data
+import csv, io, requests
 
 
 # Create your views here.
@@ -145,11 +147,20 @@ def orders(request):
                                                   'order_info': page_obj, 'order_list': order_list})
 
 
+def trello_update(request):
+    api_data = get_trello_api_data('https://api.trello.com/1/lists/5e5a0b8ad17ff766f0169719/cards?')
+    logistics = Logistics.objects.all()
+    platform = SellingPlatform.objects.all()
+
+    return render(request, 'orders/trello_update.html', {'trello_update_menu': 'bg-gray-900 text-white', 'logistics': logistics, 'platforms': platform})
+
+
 def check_nan(field):
     if field == "nan":
         return ''
 
     return field
+
 
 def shipping_update(field):
     field = field.replace("Standard Local", "").replace("-", "")
