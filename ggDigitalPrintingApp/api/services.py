@@ -1,5 +1,6 @@
 import requests
 from decouple import config
+from django.http import JsonResponse
 
 
 def get_trello_api_data(url):
@@ -18,3 +19,18 @@ def get_trello_api_data(url):
         return response.json()
     except requests.exceptions.RequestException as e:
         return e
+    
+
+def update_trello_api_data(url, params):
+    trello_api_key = config('TRELLO_API_KEY')
+    trello_api_token = config('TRELLO_TOKEN_KEY')
+
+    params['key'] = trello_api_key
+    params['token'] = trello_api_token
+
+    response = requests.put(url, params=params)
+
+    if response.status_code == 200:
+        return JsonResponse({'message': 'Card updated successfully', 'data': response.json()})
+    else:
+        return JsonResponse({'message': 'Failed to update card', 'error': response.text}, status=response.status_code)

@@ -46,5 +46,6 @@ VALUES
 ('Coaster','0','3mm','round'),
 ('PlaymatCase','100','60x35','spandex'),
 ('PlaymatCase','100','60x40','spandex'),
-('PlaymatCase','100','60x60','spandex')
+('PlaymatCase','100','60x60','spandex'),
+('PlaymatCase','100','60x30','spandex')
 ```

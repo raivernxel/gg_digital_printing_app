@@ -2,11 +2,14 @@ import pandas as pd
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.db.models import F
+from django.http import JsonResponse
 from .forms import OrderInformationForm
 from .models import OrderInformation, Logistics, OrderStatus, SellingPlatform, OrderList
+from products.models import ProductInformation, ProductTypes, ProductPrices
 from datetime import datetime
 from decouple import config
-from api.services import get_trello_api_data
+from api.services import get_trello_api_data, update_trello_api_data
 import csv, io, requests
 
 
@@ -148,11 +151,89 @@ def orders(request):
 
 
 def trello_update(request):
-    api_data = get_trello_api_data('https://api.trello.com/1/lists/5e5a0b8ad17ff766f0169719/cards?')
+    if request.method == 'POST':
+        trello_card_id = request.POST.get('card_id')
+        username = request.POST.get('usernames')
+        list_of_orders = request.POST.get('list_of_orders')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        region = request.POST.get('region')
+        postal_code = request.POST.get('postal_code')
+        first_name = request.POST.get('first_name')
+        surname = request.POST.get('last_name')
+        contact_number = request.POST.get('contact_number')
+        email = request.POST.get('email')
+        released_amount = request.POST.get('released_amount')
+        delivery_fee = request.POST.get('delivery_fee')
+
+        logistics = request.POST.get('logistics')
+        tracking_number = request.POST.get('tracking_number')
+        platform = request.POST.get('platform')
+
+        print(f'{list_of_orders}\n'
+              f'Address: {address}\n'
+              f'City: {city}\n'
+              f'Region: {region}\n'
+              f'Zip Code: {postal_code}\n'
+              f'Name: {first_name} {surname}\n'
+              f'Contact Number: {contact_number}\n'
+              f'Email: {email}\n\n'
+              f'Paid Amount: {released_amount}\n'
+              f'Delivery Fee: {delivery_fee}\n')
+        
+        get_card_url = f'https://api.trello.com/1/cards/{trello_card_id}'
+
+        desc = (f'{list_of_orders}\n'
+                f'Address: {address}\n'
+                f'City: {city}\n'
+                f'Region: {region}\n'
+                f'Zip Code: {postal_code}\n'
+                f'Name: {first_name} {surname}\n'
+                f'Contact Number: {contact_number}\n'
+                f'Email: {email}\n\n'
+                f'Paid Amount: {released_amount}\n'
+                f'Delivery Fee: {delivery_fee}\n')
+        
+        params = {
+            'desc': desc,
+            'idList': config('TRELLO_MOUSEPAD_FOR_DELIVERY_ID')
+        }
+        
+        update_trello_api_data(get_card_url, params)
+
+
+    api_data = get_trello_api_data('https://api.trello.com/1/lists/5e5a0f3cf8a36f344afdab04/cards?')
+
     logistics = Logistics.objects.all()
     platform = SellingPlatform.objects.all()
+    product_info = ProductInformation.objects.filter(product_name=F('product_type'))
+    product_types = ProductTypes.objects.all()
 
-    return render(request, 'orders/trello_update.html', {'trello_update_menu': 'bg-gray-900 text-white', 'logistics': logistics, 'platforms': platform})
+    for label in api_data[0]['labels']:
+        if label['color'] == 'orange':
+            api_data[0]['logistic'] = label['name']
+
+    if api_data[0]['start'] != None:
+        api_data[0]['start'] = datetime.fromisoformat(api_data[0]['start'].replace("Z", ""))
+
+    return render(request, 'orders/trello_update.html', {'trello_update_menu': 'bg-gray-900 text-white', 
+                                                         'logistics': logistics, 'platforms': platform, 'product_info': product_info,
+                                                         'product_types': product_types, 'trello_data': api_data[0]})
+
+
+def load_var_names(request):
+    prod_name = request.GET.get('prod_name')
+    var_names = ProductInformation.objects.filter(product_name=prod_name).order_by('variation_name')
+    return JsonResponse(list(var_names.values('variation_name')), safe=False)
+
+
+def get_prod_price(request):
+    prod_name = request.GET.get('prod_name')
+    var_name = request.GET.get('var_name')
+    prod_info = ProductInformation.objects.get(product_name=prod_name, variation_name=var_name)
+    price = ProductPrices.objects.get(_product_name=prod_info.get_prod_name())
+
+    return JsonResponse(price.price, safe=False)
 
 
 def check_nan(field):

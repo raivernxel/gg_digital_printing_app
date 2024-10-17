@@ -31,4 +31,8 @@ VALUES
 ('T-shirt:S:cot-span-round','65','199','2024-01-01'),
 ('T-shirt:L:cot-span-round','70','205','2024-01-01'),
 ('Mousepad:70x30:black','78.3','370','2024-01-01'),
+('PlaymatCase:60x30:spandex','8','250','2024-01-01'),
+('PlaymatCase:60x35:spandex','10','250','2024-01-01'),
+('PlaymatCase:60x40:spandex','12','300','2024-01-01'),
+('PlaymatCase:60x60:spandex','14','300','2024-01-01'),
 ```

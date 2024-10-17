@@ -11,6 +11,15 @@ class Logistics(models.Model):
         db_table = 'logistics'
 
 
+class OrderMaintenance(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+    value = models.CharField(max_length=100)
+    remarks = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        db_table = 'order_maintenance'
+
+
 class SellingPlatform(models.Model):
     platform = models.CharField(unique=True, max_length=20)
 

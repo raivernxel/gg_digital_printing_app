@@ -24,6 +24,7 @@ def product_prices(request):
 
 
 def insert_product_information(request):
+    inserted_count = 0
     if request.method == 'POST':
         # Get the uploaded file
         csv_file = request.FILES['csv_file']
@@ -51,16 +52,18 @@ def insert_product_information(request):
                 variation_1 = row[titles["Variation 1"]]
                 variation_2 = row[titles["Variation 2"]]
 
-                product_info = ProductInformation(product_name=product_name, variation_name=variation_name,
+                if not ProductInformation.objects.filter(product_name=product_name, variation_name=variation_name).exists():
+                    inserted_count += 1
+                    product_info = ProductInformation(product_name=product_name, variation_name=variation_name,
                                                   product_type=product_type, variation_1=variation_1,
                                                   variation_2=variation_2)
-
-                product_info.save()
+                
+                    product_info.save()
             else:
                 for y, col in enumerate(row):
                     titles[col] = y
 
-    return render(request, 'products/insert_product_information.html', {'product_info_menu': 'bg-gray-900 text-white'})
+    return render(request, 'products/insert_product_information.html', {'product_info_menu': 'bg-gray-900 text-white', 'inserted_count': inserted_count})
 
 
 def insert_products(request):

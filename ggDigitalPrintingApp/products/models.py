@@ -63,6 +63,9 @@ class ProductInformation(models.Model):
                                        variation_2=self.variation_2).exists():
             raise ValueError(f"No such product name in Product list! "
                              f"{self.product_type}:{self.variation_1}:{self.variation_2}")
+        
+    def get_prod_name(self):
+        return f'{self.product_type}:{self.variation_1}:{self.variation_2}'
 
     # Validate first before saving.
     def save(self, *args, **kwargs):
@@ -70,4 +73,7 @@ class ProductInformation(models.Model):
         super(ProductInformation, self).save(*args, **kwargs)
 
     class Meta:
+        constraints = [
+            UniqueConstraint(fields=('product_name', 'variation_name'), name='unique_product_info')
+        ]
         db_table = 'product_information'
