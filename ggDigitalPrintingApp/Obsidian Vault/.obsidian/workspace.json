@@ -21,66 +21,6 @@
                 }
               }
             }
-          },
-          {
-            "id": "cf547422161bc67c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Order List Page.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "5a9e6823cb424d36",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "selling_platform.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "1203d416fede98c3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "SellingPlatform DB.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "1c84e4f8bd51bde8",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "product_information.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "c5f732e8788db108",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Product Information DB.md",
-                "mode": "source",
-                "source": false
-              }
-            }
           }
         ]
       }
@@ -211,24 +151,33 @@
   },
   "active": "d74d3d6e419358e2",
   "lastOpenFiles": [
-    "Order List Page.md",
+    "Product Information Data~460FE.tmp",
+    "Product Information Data~999B9.tmp",
+    "order_maintenance.md",
+    "Order Maintenance DB.md",
+    "Logistics DB.md",
+    "logistics.md",
     "GG Digital Printing App.canvas",
+    "Nylon Spandex Price.md",
+    "product_prices.md",
+    "products_db.md",
+    "Products DB.md",
+    "ProductPrices DB.md",
+    "Product Information Data~A0DEF.tmp",
+    "Product Information Data~0F6D4.tmp",
+    "Product Information Data~CD0F5.tmp",
+    "Product Information Data~C2ED9.tmp",
+    "Products.md",
+    "product_information.md",
+    "product_types.md",
+    "ProductTypes DB.md",
+    "Order List Page.md",
     "SellingPlatform DB.md",
     "selling_platform.md",
     "Product Information DB.md",
-    "product_information.md",
     "Product Information Data.csv",
-    "product_prices.md",
-    "ProductPrices DB.md",
-    "product_types.md",
-    "ProductTypes DB.md",
-    "products_db.md",
-    "Products DB.md",
-    "logistics.md",
-    "Logistics DB.md",
     "order_status.md",
     "OrderStatus DB.md",
-    "Products.md",
     "Orders.md",
     "2024-09-17.md",
     "Django Model.canvas",
@@ -236,10 +185,6 @@
     "Database SQL.md",
     "Django Apps.md",
     "Django Model Meta.md",
-    "Django Foreign Key on_delete Option.md",
-    "Django Model Fields.md",
-    "Share Holders.md",
-    "Sites.md",
     "GG Digital Printing App"
   ]
 }

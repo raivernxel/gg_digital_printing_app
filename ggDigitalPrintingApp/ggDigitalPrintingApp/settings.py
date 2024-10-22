@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'templatetags',
-    'api',
+    'services',
 ]
 
 TAILWIND_APP_NAME = 'theme'
