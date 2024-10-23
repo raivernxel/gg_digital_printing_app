@@ -156,7 +156,7 @@ def trello_update(request):
     printed_orders = get_trello_api_data(f'https://api.trello.com/1/lists/{config('TRELLO_MOUSEPAD_PRINTED_ID')}/cards?')
 
     if printed_orders:
-        return trello_update1(request)
+        return trello_update3(request)
     else:
         return trello_update2(request)
 
@@ -343,7 +343,7 @@ def trello_update3(request):
         
         update_trello_api_data(get_card_url, params)
 
-    orders = get_trello_api_data(f'https://api.trello.com/1/lists/{config('TRELLO_MOUSEPAD_DONE_ID')}/cards?')
+    orders = get_trello_api_data(f'https://api.trello.com/1/lists/{config('TRELLO_MOUSEPAD_PRINTED_ID')}/cards?')
     order = []
 
     logistics = Logistics.objects.all()
@@ -352,7 +352,7 @@ def trello_update3(request):
     product_types = ProductTypes.objects.all()
 
     for ord in orders:
-        if ord['desc'].startswith('Mousepad : '):
+        if not ord['desc'].startswith('Mousepad : '):
             order = ord
             break
 
@@ -388,7 +388,7 @@ def trello_update3(request):
         
         order['old_desc'] = order['desc']
         order['desc'] = orderDesc
-        order['released_amount'] = released_amount
+        order['paid_amount'] = released_amount
 
         for label in order['labels']:
             if label['color'] == 'orange':
