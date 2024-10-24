@@ -15,14 +15,31 @@
               "state": {
                 "file": "GG Digital Printing App.canvas",
                 "viewState": {
-                  "x": 60,
+                  "x": 563.5,
                   "y": -140,
                   "zoom": 0
                 }
-              }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "GG Digital Printing App"
+            }
+          },
+          {
+            "id": "60ab39aa837c0a40",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Monthly Fees DB.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Monthly Fees DB"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -42,7 +59,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
             }
           },
           {
@@ -57,7 +76,9 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "Search"
             }
           },
           {
@@ -65,7 +86,9 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
             }
           }
         ]
@@ -88,7 +111,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GG Digital Printing App.canvas",
+                "file": "Monthly Fees DB.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -96,7 +119,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Monthly Fees DB"
             }
           },
           {
@@ -105,10 +130,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "GG Digital Printing App.canvas",
+                "file": "Monthly Fees DB.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Monthly Fees DB"
             }
           },
           {
@@ -119,7 +146,9 @@
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
-              }
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
             }
           },
           {
@@ -128,8 +157,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "GG Digital Printing App.canvas"
-              }
+                "file": "Monthly Fees DB.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Monthly Fees DB"
             }
           }
         ]
@@ -149,19 +180,26 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d74d3d6e419358e2",
+  "active": "60ab39aa837c0a40",
   "lastOpenFiles": [
+    "GG Digital Printing App.canvas",
+    "electricity.md",
+    "Electricity Equipment.md",
+    "Electricity Equipment DB.md",
+    "monthly_fees.md",
+    "Monthly Fees DB.md",
+    "products_db.md",
+    "Products DB.md",
+    "Expenses.md",
+    "Untitled.md",
     "Product Information Data~460FE.tmp",
     "Product Information Data~999B9.tmp",
     "order_maintenance.md",
     "Order Maintenance DB.md",
     "Logistics DB.md",
     "logistics.md",
-    "GG Digital Printing App.canvas",
     "Nylon Spandex Price.md",
     "product_prices.md",
-    "products_db.md",
-    "Products DB.md",
     "ProductPrices DB.md",
     "Product Information Data~A0DEF.tmp",
     "Product Information Data~0F6D4.tmp",
@@ -177,14 +215,7 @@
     "Product Information DB.md",
     "Product Information Data.csv",
     "order_status.md",
-    "OrderStatus DB.md",
-    "Orders.md",
-    "2024-09-17.md",
     "Django Model.canvas",
-    "Expenses.md",
-    "Database SQL.md",
-    "Django Apps.md",
-    "Django Model Meta.md",
     "GG Digital Printing App"
   ]
 }

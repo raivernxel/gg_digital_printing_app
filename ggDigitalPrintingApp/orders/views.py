@@ -260,6 +260,7 @@ def trello_update2(request):
         trello_id_count.save()
 
     orders = get_trello_api_data(f'https://api.trello.com/1/lists/{config('TRELLO_MOUSEPAD_DONE_ID')}/cards?')
+    order = []
 
     logistics = Logistics.objects.all()
     platform = SellingPlatform.objects.all()

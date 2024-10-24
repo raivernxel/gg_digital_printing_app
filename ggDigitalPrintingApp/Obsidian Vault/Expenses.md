@@ -1,6 +1,6 @@
 - Database
-	- monthly_fees
+	- [[monthly_fees]]
 	- expenses
 	- bills
-	- electricity
+	- [[electricity]]
 	- 
