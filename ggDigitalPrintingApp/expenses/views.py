@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
-from .forms import ExpensesForm
+from .forms import ExpensesForm, BillsForm
 from .models import MonthlyFeeMaintenance, MonthlyFees
 
 
@@ -14,8 +14,8 @@ def add_expenses(request):
             return redirect('expenses:add-expenses')
     else:
         form = ExpensesForm()
-    
-    return render(request, 'expenses/add_expenses.html', {'form': form, 'add_expenses_menu': 'bg-gray-900 text-white'})
+
+    return render(request, 'expenses/add_expenses.html', {'form': form, 'expenses_menu': 'bg-gray-900 text-white'})
 
 
 def monthly_fees(request):
@@ -58,9 +58,7 @@ def monthly_fees(request):
             if new_title and new_amount:
                 MonthlyFeeMaintenance.objects.create(title=new_title, amount=new_amount)
 
-
         return redirect('expenses:monthly-fees')
-
 
     year_range = range(2022, datetime.now().year+1)
     cur_year = datetime.now().year
@@ -80,6 +78,19 @@ def monthly_fees(request):
         12: "December"
     }
 
-    return render(request, 'expenses/monthly_fees.html', {'monthly_fees_menu': 'bg-gray-900 text-white', 
+    return render(request, 'expenses/monthly_fees.html', {'expenses_menu': 'bg-gray-900 text-white',
                                                           'year_range': year_range, 'cur_year': cur_year, 'cur_month': cur_month,
                                                           'months': months, 'monthly_fee_list': monthly_fee_list})
+
+
+def add_bills(request):
+    if request.method == 'POST':
+        form = BillsForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+            return redirect('expenses:add-bills')
+    else:
+        form = BillsForm()
+
+    return render(request, 'expenses/add_bills.html', {'form': form, 'expenses_menu': 'bg-gray-900 text-white'})
