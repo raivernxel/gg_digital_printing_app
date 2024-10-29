@@ -1,0 +1,303 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Trello Update
+{% endblock %}
+
+{% block content %}
+  <div class="xl:px-96 px-16 pt-10">
+    <form action="{% url 'orders:trello-update' %}" method="post">
+      {% csrf_token %}
+      <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-12">
+          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+              <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+              <div class="mt-2">
+                <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-xs sm:max-w-md">
+                  <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
+                  <input readonly type="text" value="{{ trello_data.name }}" name="username" id="username" autocomplete="username" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="card_id" class="block text-sm font-medium leading-6 text-gray-900">Card Id</label>
+              <div class="mt-2">
+                <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-xs sm:max-w-md">
+                  <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
+                  <input readonly type="text" value="{{ trello_data.id }}" name="card_id" id="card_id" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" />
+                </div>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="order_date" class="block text-sm font-medium leading-6 text-gray-900">Ordered Date</label>
+              <div class="mt-2">
+                <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-xs sm:max-w-md">
+                  <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
+                  <input type="date" value="{{ trello_data.start|date:'Y-m-d' }}" name="order_date" id="order_date" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" />
+                </div>
+              </div>
+            </div>
+
+            <div class="sm:col-span-4">
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="deliver_date" class="block text-sm font-medium leading-6 text-gray-900">Delivered Date</label>
+              <div class="mt-2">
+                <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-xs sm:max-w-md">
+                  <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
+                  <input type="date" value="{{ trello_data.due|date:'Y-m-d' }}" name="deliver_date" id="deliver_date" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-b border-gray-900/10 pb-12">
+          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+              <label for="logistics" class="block text-sm font-medium leading-6 text-gray-900">Logistics</label>
+              <div class="mt-2">
+                <select id="logistics" name="logistics" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                  {% for logistic in logistics %}
+                    <option value="{{ logistic.logistic_name }}" {% if logistic.logistic_name == trello_data.logistic %}selected{% endif %}>
+                      {{ logistic.logistic_name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="tracking_number" class="block text-sm font-medium leading-6 text-gray-900">Tracking Number</label>
+              <div class="mt-2">
+                <input type="text" name="tracking_number" id="tracking_number" value="{{ trello_data.tracking_number }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="platform" class="block text-sm font-medium leading-6 text-gray-900">Platform</label>
+              <div class="mt-2">
+                <select id="platform" name="platform" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                  {% for platform in platforms %}
+                    <option value="{{ platform.platform }}">{{ platform.platform }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-b border-gray-900/10 pb-12">
+          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+              <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
+              <div class="mt-2">
+                <input type="text" name="first_name" id="first_name" value="{{ trello_data.first_name }}" autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
+              <div class="mt-2">
+                <input type="text" name="last_name" id="last_name" value="{{ trello_data.last_name }}" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+              <div class="mt-2">
+                <input id="email" name="email" type="email" value="{{ trello_data.email }}" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2 sm:col-start-1">
+              <label for="contact_number" class="block text-sm font-medium leading-6 text-gray-900">Contact Number</label>
+              <div class="mt-2">
+                <input type="text" name="contact_number" id="contact_number" value="{{ trello_data.contact_number }}" autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-4">
+              <label for="address" class="block text-sm font-medium leading-6 text-gray-900">Address address</label>
+              <div class="mt-2">
+                <input type="text" name="address" id="address" value="{{ trello_data.address }}" autocomplete="address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2 sm:col-start-1">
+              <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City</label>
+              <div class="mt-2">
+                <input type="text" name="city" id="city" value="{{ trello_data.city }}" autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="region" class="block text-sm font-medium leading-6 text-gray-900">State / Province</label>
+              <div class="mt-2">
+                <input type="text" name="region" id="region" value="{{ trello_data.region }}" autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="postal_code" class="block text-sm font-medium leading-6 text-gray-900">ZIP / Postal code</label>
+              <div class="mt-2">
+                <input type="text" name="postal_code" id="postal_code" value="{{ trello_data.zip_code }}" autocomplete="postal-code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-b border-gray-900/10 pb-12">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-2">
+            <label for="released_amount" class="block text-sm font-medium leading-6 text-gray-900">Released Amount</label>
+            <div class="mt-2">
+              <input type="number" name="released_amount" id="released_amount" value="{{ trello_data.paid_amount }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="delivery_fee" class="block text-sm font-medium leading-6 text-gray-900">Delivery Fee</label>
+            <div class="mt-2">
+              <input type="number" name="delivery_fee" id="delivery_fee" value="{{ trello_data.delivery_fee|default:'0' }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-b border-gray-900/10 pb-12" x-data="productDropDownData()">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-2">
+            <label for="product_types" class="block text-sm font-medium leading-6 text-gray-900">Products</label>
+            <div class="mt-2">
+              <select x-model="selectedProduct" @change="fetchVarNames" id="product_types" name="product_types" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                <option value="">-- Select Product --</option>
+                {% for prod_type in product_types %}
+                  <option value="{{ prod_type.product_type }}">{{ prod_type.product_type }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="variation_names" class="block text-sm font-medium leading-6 text-gray-900">Variations</label>
+            <div class="mt-2">
+              <select x-model="selectedVariation" @change="getProdPrice" id="variation_names" name="variation_names" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                <option value="">-- Select Variation --</option>
+                <template x-for="name in var_names" :key="name.variation_name">
+                  <option :value="name.variation_name" x-text="name.variation_name"></option>
+                </template>
+              </select>
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="product_price" class="block text-sm font-medium leading-6 text-gray-900">Product Price</label>
+            <div class="mt-2">
+              <input x-model="price" type="number" name="product_price" id="product_price" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-2">
+            <label for="quantity" class="block text-sm font-medium leading-6 text-gray-900">Quantity</label>
+            <div class="mt-2">
+              <input type="number" value="1" name="quantity" id="quantity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="returned_quantity" class="block text-sm font-medium leading-6 text-gray-900">Returned Quantity</label>
+            <div class="mt-2">
+              <input type="number" value="0" name="returned_quantity" id="returned_quantity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="defect_quantity" class="block text-sm font-medium leading-6 text-gray-900">Defect Quantity</label>
+            <div class="mt-2">
+              <input type="number" value="0" name="defect_quantity" id="defect_quantity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-full mt-10">
+          <label for="list_of_orders" class="block text-sm font-medium leading-6 text-gray-900">List of Orders</label>
+          <div class="mt-2">
+            <textarea id="list_of_orders" name="list_of_orders" rows="4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ trello_data.desc }}</textarea>
+          </div>
+        </div>
+
+        {% comment %} <div class="col-span-full mt-10">
+          <label for="old_desc" class="block text-sm font-medium leading-6 text-gray-900">Old Description</label>
+          <div class="mt-2">
+            <textarea id="old_desc" name="old_desc" rows="4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ trello_data.old_desc }}</textarea>
+          </div>
+        </div> {% endcomment %}
+        
+        <div class="mt-6">
+          <button id="addOrder" type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
+        </div>
+      </div>
+
+      <div class="mt-6 mb-6 flex items-center justify-end gap-x-6">
+        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function productDropDownData() {
+      return {
+        selectedProduct: '',
+        selectedVariation: '',
+        var_names: [],
+        price: '',
+    
+        // Function to fetch cities based on selected country
+        fetchVarNames() {
+          if (this.selectedProduct) {
+            fetch(`/orders/ajax/load_var_names/?prod_name=${this.selectedProduct}`)
+              .then((response) => response.json())
+              .then((data) => {
+                this.var_names = data
+                this.price = ''
+              })
+          } else {
+            this.var_names = []
+            this.price = ''
+          }
+        },
+
+        getProdPrice() {
+          if (this.selectedVariation){
+            fetch(`/orders/ajax/get_prod_price/?prod_name=${this.selectedProduct}&var_name=${this.selectedVariation}`)
+              .then((response) => response.json())
+              .then((data) => {
+                this.price = parseFloat(data).toFixed(2)
+              })
+          } else {
+            this.price = ''
+          }
+        },
+      }
+    }
+
+    document.getElementById('addOrder').addEventListener('click', function(){
+      product = document.getElementById('product_types').value
+      var_name = document.getElementById('variation_names').value
+      price = document.getElementById('product_price').value
+      quantity = document.getElementById('quantity').value
+      returned = document.getElementById('returned_quantity').value
+      defect = document.getElementById('defect_quantity').value
+
+      document.getElementById('list_of_orders').value += `${product} : ${var_name} : ${quantity}pc(s) x ${price} : ${returned} : ${defect}\n`
+    });
+  </script>
+{% endblock %}

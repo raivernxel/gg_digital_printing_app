@@ -1,0 +1,8 @@
+{
+	"nodes":[
+		{"id":"dac319d3d9d64129","x":-560,"y":-340,"width":400,"height":640,"type":"file","file":"Django Model Fields.md"},
+		{"id":"ed3a989966abc624","x":-160,"y":-340,"width":400,"height":640,"type":"file","file":"Django Model Meta.md"},
+		{"id":"2234fcc98755e2b5","x":240,"y":-340,"width":400,"height":640,"type":"file","file":"Django Foreign Key on_delete Option.md"}
+	],
+	"edges":[]
+}

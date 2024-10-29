@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Product Prices
+{% endblock %}
+
+{% block content %}
+    <section>
+        <form action="{% url 'products:prices' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button>Add Product</button>
+        </form>
+    </section>
+{% endblock %}

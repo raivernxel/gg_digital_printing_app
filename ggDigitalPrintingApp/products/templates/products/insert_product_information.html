@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Insert Product Information
+{% endblock %}
+
+{% block content %}
+    {% if request.method == 'POST' %}
+        <h1>Data Inserted : {{ inserted_count }}</h1>
+    {% endif %}
+    <h2>Upload CSV File</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Add Orders
+{% endblock %}
+
+{% block content %}
+    <section>
+        <form action="{% url 'orders:add-order' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button>Add Order</button>
+        </form>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="data_file" accept=".xlsx, .csv" required>
+            <button type="submit">Upload</button>
+        </form>
+    </section>
+{% endblock %}
