@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'templatetags',
     'services',
+    'users',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -159,6 +160,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+# settings.py
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/users/login"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -5,6 +5,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProductPricesForm
 from .models import Products, ProductInformation
+from share_holders.models import TransactionHistory, TransactionTypeMaintenance, ShareHolders
+
+from datetime import datetime
 
 
 # Create your views here.
@@ -102,3 +105,117 @@ def insert_products(request):
         return render(request, 'products/insert_products.html', {'insert_query': insert_query, 'insert_products_menu': 'bg-gray-900 text-white'})
 
     return render(request, 'products/insert_products.html', {'insert_products_menu': 'bg-gray-900 text-white'})
+
+
+def inser_transaction_history_data():
+    # Data for Trasaction history
+    data = [
+        ('Jam', '11/1/2022', 5191.63),
+        ('Mic', '11/1/2022', 5191.63),
+        ('Jenny', '11/1/2022', 5191.63),
+        ('MaryCris', '11/1/2022', 2595.81),
+        ('Bane', '11/1/2022', 2595.81),
+        ('Jam', '12/1/2022', 4515.84),
+        ('Mic', '12/1/2022', 4515.84),
+        ('Jenny', '12/1/2022', 4515.84),
+        ('MaryCris', '12/1/2022', 2257.92),
+        ('Bane', '12/1/2022', 2257.92),
+        ('Jam', '1/1/2023', 14482.93),
+        ('Mic', '1/1/2023', 14482.93),
+        ('Jenny', '1/1/2023', 14482.93),
+        ('MaryCris', '1/1/2023', 7241.47),
+        ('Bane', '1/1/2023', 7241.47),
+        ('Jam', '2/1/2023', 2987.58),
+        ('Mic', '2/1/2023', 2987.58),
+        ('Jenny', '2/1/2023', 2987.58),
+        ('MaryCris', '2/1/2023', 1493.79),
+        ('Bane', '2/1/2023', 1493.79),
+        ('Jam', '3/1/2023', 3221.09),
+        ('Mic', '3/1/2023', 3221.09),
+        ('Jenny', '3/1/2023', 3221.09),
+        ('MaryCris', '3/1/2023', 1610.54),
+        ('Bane', '3/1/2023', 1610.54),
+        ('Jam', '4/1/2023', 5537.42),
+        ('Mic', '4/1/2023', 5537.42),
+        ('Jenny', '4/1/2023', 5537.42),
+        ('MaryCris', '4/1/2023', 2768.71),
+        ('Bane', '4/1/2023', 2768.71),
+        ('Jam', '5/1/2023', 2677.05),
+        ('Mic', '5/1/2023', 2677.05),
+        ('Jenny', '5/1/2023', 2677.05),
+        ('MaryCris', '5/1/2023', 1338.53),
+        ('Bane', '5/1/2023', 1338.53),
+        ('Jam', '6/1/2023', 1645.97),
+        ('Mic', '6/1/2023', 1645.97),
+        ('Jenny', '6/1/2023', 1645.97),
+        ('MaryCris', '6/1/2023', 822.99),
+        ('Bane', '6/1/2023', 822.99),
+        ('Jam', '7/1/2023', 2229.43),
+        ('Mic', '7/1/2023', 2229.43),
+        ('Jenny', '7/1/2023', 2229.43),
+        ('MaryCris', '7/1/2023', 1114.71),
+        ('Bane', '7/1/2023', 1114.71),
+        ('Jam', '11/1/2023', 2936.54),
+        ('Mic', '11/1/2023', 2936.54),
+        ('Jenny', '11/1/2023', 2936.54),
+        ('MaryCris', '11/1/2023', 1468.27),
+        ('Bane', '11/1/2023', 1468.27),
+        ('Jam', '12/1/2023', 3826.48),
+        ('Mic', '12/1/2023', 3826.48),
+        ('Jenny', '12/1/2023', 3826.48),
+        ('MaryCris', '12/1/2023', 1913.24),
+        ('Bane', '12/1/2023', 1913.24),
+        ('Jam', '1/1/2024', 3147),
+        ('Mic', '1/1/2024', 3147),
+        ('Jenny', '1/1/2024', 3147),
+        ('MaryCris', '1/1/2024', 1573.5),
+        ('Bane', '1/1/2024', 1573.5),
+        ('Jam', '2/1/2024', 5319.64),
+        ('Mic', '2/1/2024', 5319.64),
+        ('Jenny', '2/1/2024', 5319.64),
+        ('MaryCris', '2/1/2024', 2659.82),
+        ('Bane', '2/1/2024', 2659.82),
+        ('Jam', '3/1/2024', 2332.79),
+        ('Mic', '3/1/2024', 2332.79),
+        ('Jenny', '3/1/2024', 2332.79),
+        ('MaryCris', '3/1/2024', 1166.4),
+        ('Bane', '3/1/2024', 1166.4),
+        ('Jam', '4/1/2024', 873.14),
+        ('Mic', '4/1/2024', 873.14),
+        ('Jenny', '4/1/2024', 873.14),
+        ('MaryCris', '4/1/2024', 436.57),
+        ('Bane', '4/1/2024', 436.57),
+        ('Jam', '5/1/2024', 437.02),
+        ('Mic', '5/1/2024', 437.02),
+        ('Jenny', '5/1/2024', 437.02),
+        ('MaryCris', '5/1/2024', 218.51),
+        ('Bane', '5/1/2024', 218.51),
+        ('Jam', '6/1/2024', 3396.42),
+        ('Mic', '6/1/2024', 3396.42),
+        ('Jenny', '6/1/2024', 3396.42),
+        ('MaryCris', '6/1/2024', 1698.21),
+        ('Bane', '6/1/2024', 1698.21),
+        ('Jam', '7/1/2024', 272.2),
+        ('Mic', '7/1/2024', 272.2),
+        ('Jenny', '7/1/2024', 272.2),
+        ('MaryCris', '7/1/2024', 136.1),
+        ('Bane', '7/1/2024', 136.1),
+        ('Jam', '8/1/2024', 772.21),
+        ('Mic', '8/1/2024', 772.21),
+        ('Jenny', '8/1/2024', 772.21),
+        ('MaryCris', '8/1/2024', 386.11),
+        ('Bane', '8/1/2024', 386.11),
+        ('Jam', '9/1/2024', 1094.73),
+        ('Mic', '9/1/2024', 1094.73),
+        ('Jenny', '9/1/2024', 1094.73),
+        ('MaryCris', '9/1/2024', 547.37),
+        ('Bane', '9/1/2024', 547.37)
+    ]
+
+    for col in data:
+        shareholder = ShareHolders.objects.get(username=col[0])
+        transaction_type = TransactionTypeMaintenance.objects.get(transaction_type='DEBIT')
+        transaction_date = datetime.strptime(col[1], '%m/%d/%Y')
+
+        TransactionHistory.objects.create(user_id=shareholder, amount=col[2], transaction_type=transaction_type,
+                                          transaction_date=transaction_date, remarks='')
