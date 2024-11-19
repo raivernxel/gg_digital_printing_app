@@ -1,4 +1,5 @@
 import pandas as pd
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -15,7 +16,11 @@ from services.common import get_trello_id, get_trello_id_count
 import csv, io, requests
 
 
-# Create your views here.
+def is_admin(user):
+    return user.is_superuser
+
+
+@user_passes_test(is_admin)
 def add_orders(request):
     if request.method == 'POST':
         form = ""
@@ -152,6 +157,7 @@ def orders(request):
                                                   'order_info': page_obj, 'order_list': order_list})
 
 
+@user_passes_test(is_admin)
 def trello_update(request):
     printed_orders = get_trello_api_data(f'https://api.trello.com/1/lists/{config('TRELLO_MOUSEPAD_PRINTED_ID')}/cards?')
 
@@ -160,6 +166,8 @@ def trello_update(request):
     else:
         return trello_update2(request)
 
+
+@user_passes_test(is_admin)
 def trello_update1(request):
     if request.method == 'POST':
         order_data = extract_order_data(request)
@@ -207,6 +215,7 @@ def trello_update1(request):
                                                          'product_types': product_types, 'trello_data': order_data})
 
 
+@user_passes_test(is_admin)
 def trello_update2(request):
     if request.method == 'POST':
         order_data = extract_order_data(request)
@@ -300,6 +309,8 @@ def trello_update2(request):
                                                          'logistics': logistics, 'platforms': platform, 'product_info': product_info,
                                                          'product_types': product_types, 'trello_data': order})
 
+
+@user_passes_test(is_admin)
 def trello_update3(request):
     if request.method == 'POST':
         trello_id_count = OrderMaintenance.objects.get(name='trello_id_count').value

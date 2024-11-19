@@ -1,14 +1,82 @@
 {% extends 'layout.html' %}
+{% load widget_tweaks %}
 
 {% block title %}
     Insert Products
 {% endblock %}
 
 {% block content %}
-    <h2>Register</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <div>
+                <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Create an Account</h2>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="text-red-600 text-center mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form method="POST" action="{% url 'users:register' %}" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="id_username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+                        <div class="mt-2">
+                            {{ form.username|add_class:"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" }}
+                        </div>
+                        {% if form.username.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="id_email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                        <div class="mt-2">
+                            {{ form.email|add_class:"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" }}
+                        </div>
+                        {% if form.email.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="id_password1" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                        <div class="mt-2">
+                            {{ form.password1|add_class:"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" }}
+                        </div>
+                        {% if form.password1.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="id_password2" class="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
+                        <div class="mt-2">
+                            {{ form.password2|add_class:"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" }}
+                        </div>
+                        {% if form.password2.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-6">
+                        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Sign up
+                        </button>
+                    </div>
+                </form>
+
+                <p class="mt-5 text-center text-sm text-gray-600">
+                    Already have an account?
+                    <a href="/users/login" class="font-medium text-indigo-600 hover:text-indigo-500"> Sign in </a>
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

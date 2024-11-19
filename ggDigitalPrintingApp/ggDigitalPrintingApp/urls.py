@@ -16,14 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler403, handler404, handler500
 from . import views
+
+handler403 = 'ggDigitalPrintingApp.views.custom_403'
+handler404 = 'ggDigitalPrintingApp.views.custom_404'
+handler500 = 'ggDigitalPrintingApp.views.custom_500'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.homepage),
+    path('', views.homepage, name='home'),
     path('orders/', include('orders.urls')),
     path('products/', include('products.urls')),
     path('expenses/', include('expenses.urls')),
+    path('shareholders/', include('share_holders.urls')),
     path('users/', include('users.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
+
+    path('access-denied/', views.access_denied, name='access-denied'),
 ]
