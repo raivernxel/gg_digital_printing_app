@@ -7,6 +7,7 @@ class ShareHolders(models.Model):
     username = models.CharField(primary_key=True, max_length=20)
     share_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     invested = models.DecimalField(max_digits=14, decimal_places=4)
+    name = models.CharField(max_length=20, blank=True)
 
     class Meta:
         db_table = 'share_holders'

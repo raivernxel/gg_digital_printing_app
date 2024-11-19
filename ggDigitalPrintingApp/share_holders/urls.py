@@ -1,5 +1,8 @@
 from django.urls import path
+from . import views
+
+app_name = 'shareholders'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('user-income/', views.user_income, name='user-income'),
 ]

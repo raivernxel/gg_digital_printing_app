@@ -2,9 +2,14 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from .forms import ExpensesForm, BillsForm
 from .models import MonthlyFeeMaintenance, MonthlyFees
+from django.contrib.auth.decorators import user_passes_test
 
 
-# Create your views here.
+def is_admin(user):
+    return user.is_superuser
+
+
+@user_passes_test(is_admin)
 def add_expenses(request):
     if request.method == 'POST':
         form = ExpensesForm(request.POST, request.FILES)
@@ -18,6 +23,7 @@ def add_expenses(request):
     return render(request, 'expenses/add_expenses.html', {'form': form, 'expenses_menu': 'bg-gray-900 text-white'})
 
 
+@user_passes_test(is_admin)
 def monthly_fees(request):
     monthly_fee_list = MonthlyFeeMaintenance.objects.all()
 
@@ -83,6 +89,7 @@ def monthly_fees(request):
                                                           'months': months, 'monthly_fee_list': monthly_fee_list})
 
 
+@user_passes_test(is_admin)
 def add_bills(request):
     if request.method == 'POST':
         form = BillsForm(request.POST, request.FILES)

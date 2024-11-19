@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load custom_filters %}
+{% load humanize %}
 
 {% block title %}
     Orders
@@ -34,7 +35,7 @@
                                             <div class="basis-1/4 text-right">x{{ list.quantity }}</div>
                                         </div>
                                     </div>
-                                    <div class="basis-4/12 p-3 text-sm tracking-wide text-left whitespace-nowrap">{{ list.deal_price|floatformat:2 }}</div>
+                                    <div class="basis-4/12 p-3 text-sm tracking-wide text-left whitespace-nowrap">{{ list.deal_price|floatformat:2|intcomma }}</div>
                             </div>
                         {% endfor %}
                     </div>
