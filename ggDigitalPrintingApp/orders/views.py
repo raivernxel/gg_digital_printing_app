@@ -20,6 +20,84 @@ def is_admin(user):
     return user.is_superuser
 
 
+# Get the list of orders for the update of released amount
+def get_excel_data(data_file, sheet_name, row_count):
+    excel_data = pd.read_excel(data_file, sheet_name=None, header=row_count)
+
+    column_arrays = {}
+
+    for sn, df in excel_data.items():
+        if sn == sheet_name:
+            if row_count == 0:
+                for row in df.values:
+                    row_count += 1
+                    if row[0] == 'Sequence No.':
+                        return get_excel_data(data_file, sheet_name, row_count)
+            else:
+                for column_name in df.columns:
+                    column_arrays[column_name] = df[column_name].tolist()
+    
+    return column_arrays
+
+
+def add_order_fulfillment(data_file):
+    message = ''
+    items_updated_count = 0
+
+    # Updating the released amount of the Delivered Orders
+    column_arrays = get_excel_data(data_file, 'Income', 0)
+
+    for x in range(len(column_arrays['Sequence No.'])):
+        if OrderInformation.objects.filter(order_id=column_arrays['Order ID'][x]):
+            order_status = OrderStatus.objects.get(status_type='Delivered')
+            order_info = OrderInformation.objects.get(order_id=column_arrays['Order ID'][x])
+
+            if order_info.order_status.status_type != 'Cancelled':
+                if order_info.released_amount == 0:
+                    items_updated_count += 1
+                else:
+                    continue
+
+                order_info.order_status = order_status
+            else:
+                continue
+                
+            order_info.released_amount = column_arrays['Total Released Amount (₱)'][x]
+            order_info.order_complete_date = datetime.strptime(
+                                              column_arrays['Payout Completed Date'][x], "%Y-%m-%d").date()
+            
+            order_info.save()
+        else:
+            message += f'No info : {column_arrays['Order ID'][x]}\n'
+    
+    message += f'--------------------------------\n'
+    message += f'Updated Orders : {items_updated_count}'
+
+    column_arrays = get_excel_data(data_file, 'Adjustment', 0)
+
+    # Updating the released amount for cancelled orders
+    for x in range(len(column_arrays['Sequence No.'])):
+        order_id = column_arrays['Linked Order No.'][x]
+
+        if OrderInformation.objects.filter(order_id=order_id):
+            order_info = OrderInformation.objects.get(order_id=order_id)
+
+            if order_info.order_status.status_type != 'Cancelled':
+                if 'Return Refund' in column_arrays['Adjustment Type | Description'][x]:
+                    order_status = OrderStatus.objects.get(status_type='Cancelled')
+                    order_info.released_amount += int(column_arrays['Adjustment Amount'][x])
+                    order_info.order_status = order_status
+                    order_info.cancelled_date = datetime.strptime(
+                                                column_arrays['Payout Completed Date'][x], "%Y-%m-%d").date()
+                    
+                order_info.save()
+
+                message += f'--------------------------------\n'
+                message += f'Return Refund parcels: {order_id}'
+
+    return message
+
+
 @user_passes_test(is_admin)
 def add_orders(request):
     if request.method == 'POST':
@@ -35,6 +113,12 @@ def add_orders(request):
                 # Create a dictionary of data by column from the Shopee's Excel file.
                 data_dict = {}
                 for sheet_name, df in excel_data.items():
+                    if sheet_name == 'Income':
+                        message = add_order_fulfillment(data_file)
+
+                        return render(request, 'orders/add_orders.html',
+                                      {'form': form, 'add_orders_menu': 'bg-gray-900 text-white', 'message': message})
+
                     column_arrays = {}
                     for column_name in df.columns:
                         column_arrays[column_name] = df[column_name].tolist()
@@ -54,7 +138,7 @@ def add_orders(request):
                         tracking_number = check_nan(str(data_dict['orders']['Tracking Number*'][x]))
                         shipping_option = shipping_update(data_dict['orders']['Shipping Option'][x])
 
-                        order_status = "Delivered"
+                        order_status = "In Transit"
                         if data_dict['orders']['Order Status'][x] != "Completed":
                             order_status = data_dict['orders']['Order Status'][x]
 
@@ -101,40 +185,8 @@ def add_orders(request):
                                            returned_quantity=returned_quantity, sku=sku)
 
                         order_list.save()
-
-                    # print(data_dict['orders']['Order ID'][x])
-                    # initial_data = {
-                    #     'order_id': data_dict['orders']['Order ID'][x],
-                    #     'username': data_dict['orders']['Username (Buyer)'][x],
-                    #     'delivery_address': data_dict['orders']['Delivery Address'][x]
-                    # }
-                    # break
-
-                # form = OrderInformationForm(initial=initial_data)
-                # return render(request, 'orders/add_orders.html', {'form': form})
-
             except Exception as e:
                 return HttpResponse(f"Error processing file: {e}")
-
-            # Process the rows in the CSV
-            # for x, row in enumerate(reader):
-            #     if x > 0:
-            #         continue
-            #         # product_name = row[titles["Product Name"]]
-            #         # variation_name = row[titles["Variation Name"]]
-            #         # product_type = row[titles["Product Type"]]
-            #         # variation_1 = row[titles["Variation 1"]]
-            #         # variation_2 = row[titles["Variation 2"]]
-            #         #
-            #         # product_info = ProductInformation(product_name=product_name, variation_name=variation_name,
-            #         #                                   product_type=product_type, variation_1=variation_1,
-            #         #                                   variation_2=variation_2)
-            #         #
-            #         # product_info.save()
-            #     else:
-            #         for y, col in enumerate(row):
-            #             print(col)
-            #             titles[col] = y
         else:
             form = OrderInformationForm(request.POST)
     else:
