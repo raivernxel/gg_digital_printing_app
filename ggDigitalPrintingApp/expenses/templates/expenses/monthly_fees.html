@@ -15,8 +15,8 @@
                             <label for="month" class="block text-sm font-medium leading-6 text-gray-900">Month</label>
                             <div class="mt-2">
                                 <select id="month" name="month" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                    {% for num, month in months.items %}
-                                        <option value="{{ num }}" {% if num == cur_month %}selected{% endif %}>
+                                    {% for num, month in month_and_year.months.items %}
+                                        <option value="{{ num }}" {% if num == month_and_year.cur_month %}selected{% endif %}>
                                         {{ month }}
                                         </option>
                                     {% endfor %}
@@ -27,8 +27,8 @@
                             <label for="year" class="block text-sm font-medium leading-6 text-gray-900">Year</label>
                             <div class="mt-2">
                                 <select id="year" name="year" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                    {% for year in year_range %}
-                                        <option value="{{ year }}" {% if year == cur_year %}selected{% endif %}>
+                                    {% for year in month_and_year.year_range %}
+                                        <option value="{{ year }}" {% if year == month_and_year.cur_year %}selected{% endif %}>
                                         {{ year }}
                                         </option>
                                     {% endfor %}

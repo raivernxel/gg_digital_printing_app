@@ -62,19 +62,24 @@ def insert_product_information(request):
                 product_type = row[titles["Product Type"]]
                 variation_1 = row[titles["Variation 1"]]
                 variation_2 = row[titles["Variation 2"]]
+                bundle = True if row[titles["Bundle"]] == 'TRUE' else False
+                bundle_count = row[titles["Bundle Count"]]
 
-                if not ProductInformation.objects.filter(product_name=product_name, variation_name=variation_name).exists():
+                if not ProductInformation.objects.filter(product_name=product_name, variation_name=variation_name,
+                                                         product_type=product_type, variation_1=variation_1,
+                                                         variation_2=variation_2).exists():
                     inserted_count += 1
                     product_info = ProductInformation(product_name=product_name, variation_name=variation_name,
-                                                  product_type=product_type, variation_1=variation_1,
-                                                  variation_2=variation_2)
-                
+                                                      product_type=product_type, variation_1=variation_1,
+                                                      variation_2=variation_2, bundle=bundle, bundle_count=bundle_count)
+
                     product_info.save()
             else:
                 for y, col in enumerate(row):
                     titles[col] = y
 
-    return render(request, 'products/insert_product_information.html', {'product_info_menu': 'bg-gray-900 text-white', 'inserted_count': inserted_count})
+    return render(request, 'products/insert_product_information.html',
+                  {'product_info_menu': 'bg-gray-900 text-white', 'inserted_count': inserted_count})
 
 
 @user_passes_test(is_admin)
@@ -111,7 +116,8 @@ def insert_products(request):
                 #         else:
                 #             insert_query += "),\n"
 
-        return render(request, 'products/insert_products.html', {'insert_query': insert_query, 'insert_products_menu': 'bg-gray-900 text-white'})
+        return render(request, 'products/insert_products.html',
+                      {'insert_query': insert_query, 'insert_products_menu': 'bg-gray-900 text-white'})
 
     return render(request, 'products/insert_products.html', {'insert_products_menu': 'bg-gray-900 text-white'})
 
@@ -123,7 +129,8 @@ def insert_single_transaction_history(request):
     transaction_date = datetime.strptime('11/17/2024', '%m/%d/%Y')
 
     TransactionHistory.objects.create(user_id=shareholder, amount=3562.88, transaction_type=transaction_type,
-                                        transaction_date=transaction_date, remarks=f'Payment for the Cebu Pacific Tickets.')
+                                      transaction_date=transaction_date,
+                                      remarks=f'Payment for the Cebu Pacific Tickets.')
 
 
 @user_passes_test(is_admin)
@@ -314,7 +321,8 @@ def insert_transaction_history_data():
         month_of = transaction_date - relativedelta(months=1)
 
         TransactionHistory.objects.create(user_id=shareholder, amount=col[2], transaction_type=transaction_type,
-                                          transaction_date=transaction_date, remarks=f'For the month of: {months[month_of.month]}')
+                                          transaction_date=transaction_date,
+                                          remarks=f'For the month of: {months[month_of.month]}')
 
     # For Debit
     # for col in data:

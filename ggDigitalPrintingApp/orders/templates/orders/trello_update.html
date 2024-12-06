@@ -260,7 +260,6 @@
         var_names: [],
         price: '',
     
-        // Function to fetch cities based on selected country
         fetchVarNames() {
           if (this.selectedProduct) {
             fetch(`/orders/ajax/load_var_names/?prod_name=${this.selectedProduct}`)

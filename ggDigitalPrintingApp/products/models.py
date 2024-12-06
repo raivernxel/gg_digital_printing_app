@@ -27,10 +27,10 @@ class Products(models.Model):
 
 
 class ProductPrices(models.Model):
-    _product_name = models.CharField(unique=True, max_length=200)
+    _product_name = models.CharField(max_length=200)
     material_price = models.DecimalField(max_digits=9, decimal_places=4)
     price = models.DecimalField(max_digits=9, decimal_places=4)
-    price_last_update = models.DateField()
+    price_last_update = models.DateField(db_index=True)
 
     @property
     def product_name(self):
@@ -74,6 +74,7 @@ class ProductInformation(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=('product_name', 'variation_name'), name='unique_product_info')
+            UniqueConstraint(fields=('product_name', 'variation_name', 'product_type', 'variation_1', 'variation_2'),
+                             name='unique_product_info')
         ]
         db_table = 'product_information'

@@ -5,4 +5,5 @@ app_name = 'shareholders'
 
 urlpatterns = [
     path('user-income/', views.user_income, name='user-income'),
+    path('revenue/', views.revenue, name='revenue')
 ]

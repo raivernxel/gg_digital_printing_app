@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import ExpensesForm, BillsForm
 from .models import MonthlyFeeMaintenance, MonthlyFees
 from django.contrib.auth.decorators import user_passes_test
+from services.common import get_month_and_year
 
 
 def is_admin(user):
@@ -66,27 +67,9 @@ def monthly_fees(request):
 
         return redirect('expenses:monthly-fees')
 
-    year_range = range(2022, datetime.now().year+1)
-    cur_year = datetime.now().year
-    cur_month = datetime.now().month
-    months = {
-        1: "January",
-        2: "February",
-        3: "March",
-        4: "April",
-        5: "May",
-        6: "June",
-        7: "July",
-        8: "August",
-        9: "September",
-        10: "October",
-        11: "November",
-        12: "December"
-    }
-
     return render(request, 'expenses/monthly_fees.html', {'expenses_menu': 'bg-gray-900 text-white',
-                                                          'year_range': year_range, 'cur_year': cur_year, 'cur_month': cur_month,
-                                                          'months': months, 'monthly_fee_list': monthly_fee_list})
+                                                          'month_and_year': get_month_and_year(),
+                                                          'monthly_fee_list': monthly_fee_list})
 
 
 @user_passes_test(is_admin)

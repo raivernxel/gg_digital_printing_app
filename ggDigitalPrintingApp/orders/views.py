@@ -12,6 +12,7 @@ from products.models import ProductInformation, ProductTypes, ProductPrices
 from datetime import datetime
 from decouple import config
 from services.api import get_trello_api_data, update_trello_api_data
+import json
 from services.common import get_trello_id, get_trello_id_count
 import csv, io, requests
 
@@ -40,8 +41,7 @@ def get_excel_data(data_file, sheet_name, row_count):
     return column_arrays
 
 
-def add_order_fulfillment(data_file):
-    message = ''
+def add_order_fulfillment(data_file, common):
     items_updated_count = 0
 
     # Updating the released amount of the Delivered Orders
@@ -68,45 +68,49 @@ def add_order_fulfillment(data_file):
             
             order_info.save()
         else:
-            message += f'No info : {column_arrays['Order ID'][x]}\n'
+            common['message'] += f'No info : {column_arrays['Order ID'][x]}\n'
     
-    message += f'--------------------------------\n'
-    message += f'Updated Orders : {items_updated_count}'
+    common['message'] += f'--------------------------------\n'
+    common['message'] += f'Updated Orders : {items_updated_count}'
 
     column_arrays = get_excel_data(data_file, 'Adjustment', 0)
 
     # Updating the released amount for cancelled orders
-    for x in range(len(column_arrays['Sequence No.'])):
-        order_id = column_arrays['Linked Order No.'][x]
+    if column_arrays:
+        for x in range(len(column_arrays['Sequence No.'])):
+            order_id = column_arrays['Linked Order No.'][x]
 
-        if OrderInformation.objects.filter(order_id=order_id):
-            order_info = OrderInformation.objects.get(order_id=order_id)
+            if OrderInformation.objects.filter(order_id=order_id):
+                order_info = OrderInformation.objects.get(order_id=order_id)
 
-            if order_info.order_status.status_type != 'Cancelled':
-                if 'Return Refund' in column_arrays['Adjustment Type | Description'][x]:
-                    order_status = OrderStatus.objects.get(status_type='Cancelled')
-                    order_info.released_amount += int(column_arrays['Adjustment Amount'][x])
-                    order_info.order_status = order_status
-                    order_info.cancelled_date = datetime.strptime(
-                                                column_arrays['Payout Completed Date'][x], "%Y-%m-%d").date()
-                    
-                order_info.save()
+                if order_info.order_status.status_type != 'Cancelled':
+                    if 'Return Refund' in column_arrays['Adjustment Type | Description'][x]:
+                        order_status = OrderStatus.objects.get(status_type='Cancelled')
+                        order_info.released_amount += int(column_arrays['Adjustment Amount'][x])
+                        order_info.order_status = order_status
+                        order_info.cancelled_date = datetime.strptime(
+                                                    column_arrays['Payout Completed Date'][x], "%Y-%m-%d").date()
+                    else:
+                        order_info.released_amount += int(column_arrays['Adjustment Amount'][x])
 
-                message += f'--------------------------------\n'
-                message += f'Return Refund parcels: {order_id}'
+                    order_info.save()
 
-    return message
+                    common['message'] += f'--------------------------------\n'
+                    common['message'] += f'Return Refund parcels: {order_id}'
 
 
 @user_passes_test(is_admin)
 def add_orders(request):
+    common = {
+        'message': ''
+    }
     if request.method == 'POST':
         form = ""
         data_file = request.FILES.get('data_file')
 
         if data_file:
             # Read the Excel file using pandas
-            try:
+            # try:
                 # Read all sheets from the Excel file into a dictionary of DataFrames
                 excel_data = pd.read_excel(data_file, sheet_name=None)
 
@@ -114,10 +118,10 @@ def add_orders(request):
                 data_dict = {}
                 for sheet_name, df in excel_data.items():
                     if sheet_name == 'Income':
-                        message = add_order_fulfillment(data_file)
+                        add_order_fulfillment(data_file, common)
 
                         return render(request, 'orders/add_orders.html',
-                                      {'form': form, 'add_orders_menu': 'bg-gray-900 text-white', 'message': message})
+                                      {'form': form, 'add_orders_menu': 'bg-gray-900 text-white', 'common': json.dumps(common)})
 
                     column_arrays = {}
                     for column_name in df.columns:
@@ -138,9 +142,14 @@ def add_orders(request):
                         tracking_number = check_nan(str(data_dict['orders']['Tracking Number*'][x]))
                         shipping_option = shipping_update(data_dict['orders']['Shipping Option'][x])
 
-                        order_status = "In Transit"
-                        if data_dict['orders']['Order Status'][x] != "Completed":
-                            order_status = data_dict['orders']['Order Status'][x]
+                        if data_dict['orders']['Order Status'][x] in {"Completed", "Shipping"}:
+                            order_status = "In Transit"
+                        elif data_dict['orders']['Order Status'][x] == "To ship":
+                            order_status = "To Process"
+                        elif data_dict['orders']['Order Status'][x] == "Cancelled":
+                            order_status = "Cancelled"
+                        else:
+                            order_status = "In Transit"
 
                         cancel_reason = check_nan(str(data_dict['orders']['Cancel reason'][x]))
                         refund_status = check_nan(str(data_dict['orders']['Return / Refund Status'][x]))
@@ -185,8 +194,8 @@ def add_orders(request):
                                            returned_quantity=returned_quantity, sku=sku)
 
                         order_list.save()
-            except Exception as e:
-                return HttpResponse(f"Error processing file: {e}")
+            # except Exception as e:
+            #     return HttpResponse(f"Error processing file: {e}")
         else:
             form = OrderInformationForm(request.POST)
     else:
@@ -293,7 +302,7 @@ def trello_update2(request):
                 defect = int(break_down[4])
 
                 product_info = ProductInformation.objects.get(product_name=product_name, variation_name=variation_name)
-                product_price = ProductPrices.objects.get(_product_name=product_info.get_prod_name()).price
+                product_price = ProductPrices.objects.filter(_product_name=product_info.get_prod_name())[0].price
 
                 order_info = OrderInformation.objects.get(order_id=order_data['trello_id'])
 
@@ -419,12 +428,13 @@ def trello_update3(request):
         if not ord['desc'].startswith('Mousepad : '):
             order = ord
             break
-
-    # Mousepad : 60x35 Printed Edge : 1pc(s) x 450.00 : 0 : 0 -- Order Format
+    # Product  :    Product Name    : Quantity x Price : Return : Defect
+    # Mousepad : 60x35 Printed Edge :  1pc(s) x 450.00 :    0   :    0 -- Order Format
     if len(order) > 0:
         released_amount = 0
         orderDesc = ''
         order['delivery_fee'] = 0
+        order['email'] = ''
         for x, desc in enumerate(order['desc'].split('\n\n')):
             if x == 0:
                 for field in desc.split('\n'):
@@ -449,6 +459,8 @@ def trello_update3(request):
                         order['first_name'] = fieldValues[1]
                     elif fieldValues[0].startswith('Contact'):
                         order['contact'] = fieldValues[1]
+                    elif fieldValues[0].startswith('Email'):
+                        order['email'] = fieldValues[1]
         
         order['old_desc'] = order['desc']
         order['desc'] = orderDesc

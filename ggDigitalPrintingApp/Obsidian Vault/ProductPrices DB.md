@@ -3,6 +3,8 @@ INSERT INTO product_prices(_product_name, material_price, price, price_last_upda
 VALUES
 ('Mousepad:70x40:black','79.93','590','2024-01-01'),
 ('Banner:60x35:back2back','20','300','2024-01-01'),
+('Banner:90x60:back2back','55','700','2024-01-01'),
+('Banner:90x60:front only','30','600','2024-01-01'),
 ('Mousepad:35x30:white','50','300','2024-01-01'),
 ('Mousepad:18x22:3mm','12','110','2024-01-01'),
 ('Mousepad:60x35x2mm:no stitch','0','450','2024-01-01'),

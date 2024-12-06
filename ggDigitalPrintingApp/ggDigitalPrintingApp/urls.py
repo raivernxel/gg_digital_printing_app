@@ -31,6 +31,7 @@ urlpatterns = [
     path('expenses/', include('expenses.urls')),
     path('shareholders/', include('share_holders.urls')),
     path('users/', include('users.urls')),
+    path('employees/', include('employees.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 
     path('access-denied/', views.access_denied, name='access-denied'),

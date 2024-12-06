@@ -1,0 +1,147 @@
+{% extends 'layout.html' %}
+{% load humanize %}
+
+{% block title %}
+    Revenue Page
+{% endblock %}
+
+{% block content %}
+    <div class="xl:px-96 md:px-56 px-16 pt-10">
+        <form action="{% url 'shareholders:revenue' %}" method="post" id="revenueForm">
+        {% csrf_token %}
+            <div class="border-b border-gray-900/10 pb-12">
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-1">
+                        <label for="month" class="block text-sm font-medium leading-6 text-gray-900">Month</label>
+                        <div class="mt-2">
+                            <select id="month" name="month" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                {% for num, x in month_and_year.months.items %}
+                                    <option value="{{ num }}" {% if num == month_and_year.cur_month %}selected{% endif %}>
+                                    {{ x }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label for="year" class="block text-sm font-medium leading-6 text-gray-900">Year</label>
+                        <div class="mt-2">
+                            <select id="year" name="year" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                {% for y in month_and_year.year_range %}
+                                    <option value="{{ y }}" {% if y == month_and_year.cur_year %}selected{% endif %}>
+                                    {{ y }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="overflow-auto bg-green-500 mx-96 mt-10 rounded-t-md">
+        <div class="basis-3/12 text-left text-white font-extralight text-xl px-4 py-2">Revenue</div>
+    </div>
+    <div class="overflow-auto shadow bg-white mx-96 rounded-b-md">
+        <div class="px-5 pt-10 pb-10">
+            <div class="flex flex-row pl-2">
+                <div class="basis-3/12 border-r-2 border-gray-500/10">
+                    <div class="text-center text-3xl text-green-500 font-semibold">Php {{ revenue_data.total_sales|floatformat:2|intcomma }}</div>
+                    <div class="text-center">Total Sales</div>
+                    <div class="text-center text-3xl text-red-500 font-semibold pt-5">Php {{ revenue_data.total_expenses|floatformat:2|intcomma }}</div>
+                    <div class="text-center">Total Expenses</div>
+                </div>
+                <div class="basis-9/12 pt-8">
+                    <div class="flex flex-row">
+                        <div class="basis-1/12 text-center"></div>
+                        <div class="basis-3/12 text-center text-green-500 text-2xl">Php {{ revenue_data.total_sales|floatformat:2|intcomma }}</div>
+                        <div class="basis-1/12 text-center text-2xl">-</div>
+                        <div class="basis-3/12 text-center text-red-500 text-2xl">Php {{ revenue_data.total_expenses|floatformat:2|intcomma }}</div>
+                        <div class="basis-1/12 text-center text-2xl">=</div>
+                        <div class="basis-3/12 text-center text-green-500 text-2xl">Php {{ revenue_data.revenue|floatformat:2|intcomma }}</div>
+                    </div>
+                    <div class="flex flex-row">
+                        <div class="basis-1/12 text-center"></div>
+                        <div class="basis-3/12 text-center">Total Sales</div>
+                        <div class="basis-1/12 text-center"></div>
+                        <div class="basis-3/12 text-center">Total Expenses</div>
+                        <div class="basis-1/12 text-center"></div>
+                        <div class="basis-3/12 text-center">Revenue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overflow-auto bg-green-500 mx-96 mt-10 rounded-t-md">
+        <div class="flex flex-row pt-2 pb-2">
+            <div class="basis-1/5"></div>
+            <div class="basis-2/5 text-right text-white font-extralight text-2xl">Revenue</div>
+            <div class="basis-2/5 text-right text-white font-extralight text-2xl pr-5">Expenses</div>
+        </div>
+    </div>
+    <div class="overflow-auto shadow bg-white mx-96 rounded-b-md">
+        <div class="px-5 pt-5 pb-10">
+            <div class="flex flex-row pl-1">
+                <div class="basis-full">
+                    <div class="basis-full pb-3"><b>SALES PER PLATFORM</b></div>
+                    {% for item, value in revenue_data.total_income_per_platform.items %}
+                        {% if value > 0 %}
+                            <div class="flex flex-row border-b border-gray-400/10">
+                                <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ item }}</div>
+                                <div class="basis-2/5 text-right">{{ value|floatformat:2|intcomma }}</div>
+                                <div class="basis-2/5"></div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="basis-full py-3"><b>MATERIAL COST</b></div>
+                    {% for item, value in revenue_data.order_summary_per_product.items %}
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ item }}</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ value|floatformat:2|intcomma }})</div>
+                        </div>
+                    {% endfor %}
+                    <div class="basis-full py-3"><b>EXPENSES</b></div>
+                    {% for item, value in revenue_data.expense_list.items %}
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ item }}</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ value|floatformat:2|intcomma }})</div>
+                        </div>
+                    {% endfor %}
+                    <div class="basis-full py-3"><b>MONTHLY EXPENSES</b></div>
+                    {% for monthly_fee in revenue_data.monthly_fees %}
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ monthly_fee.title }}</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ monthly_fee.amount|floatformat:2|intcomma }})</div>
+                        </div>
+                    {% endfor %}
+                    <div class="basis-full py-3"><b>BILLS</b></div>
+                    {% for bill in revenue_data.bills %}
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ bill.bill_name }}</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ bill.amount|floatformat:2|intcomma }})</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdowns = document.querySelectorAll('select');
+            const form = document.getElementById('revenueForm');
+
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('change', function () {
+                    form.submit();
+                });
+            });
+        });
+    </script>
+{% endblock %}
