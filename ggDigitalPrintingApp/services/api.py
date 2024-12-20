@@ -34,3 +34,12 @@ def update_trello_api_data(url, params):
         return JsonResponse({'message': 'Card updated successfully', 'data': response.json()})
     else:
         return JsonResponse({'message': 'Failed to update card', 'error': response.text}, status=response.status_code)
+    
+
+def get_api(url):
+    try:
+        response = requests.get(url, timeout=20)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return e

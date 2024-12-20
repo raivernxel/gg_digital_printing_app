@@ -15,10 +15,16 @@ import json
 
 
 @login_required
-@role_required(allowed_roles=['shareholder'])
+@role_required(allowed_roles=['shareholder', 'superuser'])
 def user_income(request):
-    shareholder_info = ShareHolders.objects.get(username=request.user)
+    shareholder_info = ShareHolders.objects.get(username__iexact=request.user)
     transaction_history = TransactionHistory.objects.filter(user_id=shareholder_info).order_by('-transaction_date')
+    hide_name = True
+
+    if request.user.is_superuser:
+        transaction_history = TransactionHistory.objects.all().order_by('-transaction_date')
+        hide_name = False
+
     paginator = Paginator(transaction_history, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
@@ -34,14 +40,13 @@ def user_income(request):
             total_earned += transaction.amount
 
     return render(request, 'shareholders/user_income.html', {'transactions': page_obj, 'total_income': total_income,
-                                                             'total_earned': total_earned})
+                                                             'total_earned': total_earned, 'hide_name': hide_name})
 
 
 def expenses(request, revenue_data):
     month = int(request.POST.get('month'))
     year = int(request.POST.get('year'))
-    current_date = date(year, month, 1) + relativedelta(months=1)
-    expenses = Expenses.objects.filter(expense_date__lt=current_date)
+    expenses = Expenses.objects.filter(expense_date__month=month, expense_date__year=year)
     monthly_fees = MonthlyFees.objects.filter(month=month, year=year)
     bills = Bills.objects.filter(month=month, year=year)
 

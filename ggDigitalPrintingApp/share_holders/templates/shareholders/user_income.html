@@ -35,6 +35,9 @@
                     {% if transaction.transaction_number != None and transaction.transaction_number != '' %}
                         Ref No: {{ transaction.transaction_number }}
                     {% endif %}
+                    {% if not hide_name %}
+                        <b>{{ transaction.user_id.name }}</b>
+                    {% endif %}
                 </div>
             </div>
             <div class="w-full pl-3 pt-1 text-s">

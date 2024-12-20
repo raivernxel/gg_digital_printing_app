@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="xl:px-96 md:px-56 px-16 pt-10">
+    <div class="px-96 pt-10">
         <form action="{% url 'shareholders:revenue' %}" method="post" id="revenueForm">
         {% csrf_token %}
             <div class="border-b border-gray-900/10 pb-12">
