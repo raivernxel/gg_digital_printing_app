@@ -56,7 +56,7 @@ class OrderInformation(models.Model):
     shipping_option = models.ForeignKey(Logistics, on_delete=models.DO_NOTHING)
     order_status = models.ForeignKey(OrderStatus, on_delete=models.DO_NOTHING)
     released_amount = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    cancel_reason = models.CharField(max_length=100, blank=True)
+    cancel_reason = models.CharField(max_length=255, blank=True)
     refund_status = models.CharField(max_length=20, blank=True)
     platform = models.ForeignKey(SellingPlatform, on_delete=models.DO_NOTHING)
     delivery_fee = models.DecimalField(max_digits=9, decimal_places=4, default=0)

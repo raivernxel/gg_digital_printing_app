@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import DO_NOTHING
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -58,3 +59,12 @@ class MoneySentToPrinterInvestors(models.Model):
         db_table = 'money_sent_to_printer_investors'
 
 
+class AccountWithdrawals(models.Model):
+    name = models.CharField(max_length=100)
+    payment_platform = models.CharField(max_length=100)
+    account_number = models.CharField(max_length=50)
+    qr_code = models.ImageField(null=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'account_withdrawals'

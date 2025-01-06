@@ -5,12 +5,13 @@ from .models import TransactionHistory, ShareHolders
 from orders.models import OrderInformation, SellingPlatform, OrderList
 from products.models import ProductInformation, ProductPrices
 from expenses.models import Expenses, MonthlyFees, Bills
-from employees.models import Employees
+from employees.models import Employees, EmployeeLogin
 from users.decorators import role_required
 from services.common import get_month_and_year
 from datetime import datetime, date
 from .services import Products
 from dateutil.relativedelta import relativedelta
+from decimal import Decimal
 import json
 
 
@@ -62,6 +63,26 @@ def expenses(request, revenue_data):
     revenue_data['expense_list'] = expense_list
     revenue_data['monthly_fees'] = monthly_fees
     revenue_data['bills'] = bills
+    revenue_data['salary_hourly'] = salary_hourly(request)
+    
+
+def salary_hourly(request):
+    month = int(request.POST.get('month'))
+    year = int(request.POST.get('year'))
+    employees = Employees.objects.filter(salary_type='Hourly').exclude(employee_id=0)
+    salaries = {}
+
+    for emp in employees:
+        employee = Employees.objects.get(employee_id=emp.employee_id)
+        empLogin = EmployeeLogin.objects.filter(login__month=month, login__year=year, employee_name=employee)
+
+        for log in empLogin:
+            if emp.employee_name in salaries:
+                salaries[emp.employee_name] += emp.salary * log.hours
+            else:
+                salaries[emp.employee_name] = emp.salary * log.hours
+
+    return salaries
 
 
 def salary_per_item_sold(order_summary, total_orders):
@@ -82,10 +103,11 @@ def salary_per_item_sold(order_summary, total_orders):
                 if product_name in emp_prod.products:
                     emp_prod.salary += (emp_prod.products[product_name] * order_summary[product_type][product_name][
                         'totalOrders'])
-
+    
     print(f'{employee_list[0].employee_name} Salary: ', employee_list[0].salary)
     print(f'{employee_list[1].employee_name} Salary: ', employee_list[1].salary)
     print(f'{employee_list[2].employee_name} Salary: ', employee_list[2].salary)
+    return employee_list
 
 
 def order_list(request, order, order_summary, common):
@@ -166,8 +188,6 @@ def income(request, common, revenue_data):
 
     print('total_income_per_platform: ', total_income_per_platform)
 
-    salary_per_item_sold(order_summary, total_orders)
-
     order_summary_per_product = {}
     for prod, _ in order_summary.items():
         for prod_name, _ in order_summary[prod].items():
@@ -178,6 +198,8 @@ def income(request, common, revenue_data):
 
     revenue_data['total_income_per_platform'] = total_income_per_platform
     revenue_data['order_summary_per_product'] = order_summary_per_product
+
+    revenue_data['salary_per_item_sold'] = salary_per_item_sold(order_summary, total_orders)
 
     print('order_summary: ', order_summary)
     print('order_summary_per_product: ', order_summary_per_product)
@@ -195,6 +217,12 @@ def compute_total_revenue_and_expenses(revenue_data):
 
     for value in revenue_data['bills']:
         revenue_data['total_expenses'] += value.amount
+
+    for value in revenue_data['salary_per_item_sold']:
+        revenue_data['total_expenses'] += value.salary
+
+    for value in revenue_data['salary_hourly'].values():
+        revenue_data['total_expenses'] += value
 
 
 @login_required
@@ -215,7 +243,11 @@ def revenue(request):
         expenses(request, revenue_data)
 
         compute_total_revenue_and_expenses(revenue_data)
+        five_percent = revenue_data['total_sales'] * Decimal('0.05')
+        revenue_data['total_expenses'] += (five_percent * 2)
         revenue_data['revenue'] = revenue_data['total_sales'] - revenue_data['total_expenses']
+
+        revenue_data['fund'] = five_percent
 
     month_and_year = get_month_and_year()
     month_and_year['cur_year'] = year
@@ -227,3 +259,8 @@ def revenue(request):
                                                               'revenue_menu': 'bg-gray-900 text-white',
                                                               'common': json.dumps(common),
                                                               'revenue_data': revenue_data})
+
+
+def cash_out(request):
+    return render(request, 'shareholders/cash_out.html')
+

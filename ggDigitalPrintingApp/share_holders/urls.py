@@ -5,5 +5,6 @@ app_name = 'shareholders'
 
 urlpatterns = [
     path('user-income/', views.user_income, name='user-income'),
-    path('revenue/', views.revenue, name='revenue')
+    path('revenue/', views.revenue, name='revenue'),
+    path('cash-out/', views.cash_out, name='cash-out')
 ]

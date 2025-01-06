@@ -25,7 +25,7 @@ class EmployeeLogin(models.Model):
     employee_name = models.ForeignKey(Employees, on_delete=models.DO_NOTHING)
     login = models.DateTimeField(null=True)
     logout = models.DateTimeField(null=True)
-    hours = models.IntegerField(default=0)
+    hours = models.DecimalField(max_digits=4, decimal_places=2, default=0)
 
     class Meta:
         db_table = 'employee_login'

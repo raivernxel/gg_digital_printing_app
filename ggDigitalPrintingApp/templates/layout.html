@@ -244,7 +244,7 @@
       </div>
     </nav>
 
-    <div x-data="{ showModal: false }" x-init="if ($store.common.message != '') showModal = true;" x-show="showModal" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="messageModal">
+    <div x-cloak x-data="{ showModal: false }" x-init="if ($store.common.message != '') showModal = true;" x-show="showModal" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="messageModal">
       <!-- Background backdrop -->
       <div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
     

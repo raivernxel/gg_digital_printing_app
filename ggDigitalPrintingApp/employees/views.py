@@ -10,6 +10,7 @@ from services.api import get_api
 from pprint import pprint
 from datetime import datetime
 
+
 # Create your views here.
 def insert_employees(request):
     if request.method == 'POST':
@@ -65,6 +66,23 @@ def insert_employees(request):
     return render(request, 'employees/insert_employees.html')
 
 
+def my_login(request):
+    user_id = request.user.id
+    employee_account = Employees.objects.get(employee_id=user_id)
+
+    days_list = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 23, 24, 25, 26, 27, 30, 31]
+
+    for day in days_list:
+        date_string = f'2024-12-{day} 00:00'
+        date_format = "%Y-%m-%d %H:%M"
+        accepted_date_format = "%Y-%m-%dT%H:%M"
+        date_time = datetime.strptime(date_string, date_format).strftime(accepted_date_format)
+
+        EmployeeLogin.objects.create(employee_name=employee_account, login=date_time, hours=8)
+
+    return render(request, 'employees/employee_log.html')
+
+
 def employee_log(request):
     asia_time = get_api('https://timeapi.io/api/time/current/zone?timeZone=Asia%2FManila')
     year = asia_time['year']
@@ -81,8 +99,8 @@ def employee_log(request):
     login_time = date_time
     logout_time = ''
 
-    log_in_time = EmployeeLogin.objects.filter(login__month=month, login__year=year)
-    log_out_time = EmployeeLogin.objects.filter(logout__month=month, logout__year=year)
+    log_in_time = EmployeeLogin.objects.filter(login__month=month, login__day=day, login__year=year)
+    log_out_time = EmployeeLogin.objects.filter(logout__month=month, logout__day=day, logout__year=year)
 
     if log_in_time:
         logout_time = date_time
@@ -100,7 +118,7 @@ def employee_log(request):
         if not log_in_time:
             EmployeeLogin.objects.create(employee_name=employee_account, login=date_time)
         elif not log_out_time:
-            today_log = EmployeeLogin.objects.get(login__month=month, login__year=year)
+            today_log = EmployeeLogin.objects.get(login__month=month, login__day=day, login__year=year)
             today_log.logout = date_time
 
             today_log.save()

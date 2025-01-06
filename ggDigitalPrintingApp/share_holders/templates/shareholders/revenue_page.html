@@ -95,6 +95,17 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                    <div class="basis-full py-3"><b>FUND</b></div>
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ revenue_data.fund|floatformat:2|intcomma }})</div>
+                        </div>
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Investment</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ revenue_data.fund|floatformat:2|intcomma }})</div>
+                        </div>
                     <div class="basis-full py-3"><b>MATERIAL COST</b></div>
                     {% for item, value in revenue_data.order_summary_per_product.items %}
                         <div class="flex flex-row border-b border-gray-400/10">
@@ -125,6 +136,21 @@
                             <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ bill.bill_name }}</div>
                             <div class="basis-2/5"></div>
                             <div class="basis-2/5 text-right">({{ bill.amount|floatformat:2|intcomma }})</div>
+                        </div>
+                    {% endfor %}
+                    <div class="basis-full py-3"><b>EMPLOYEES SALARY</b></div>
+                    {% for emp in revenue_data.salary_per_item_sold %}
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ emp.employee_name }}</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ emp.salary|floatformat:2|intcomma }})</div>
+                        </div>
+                    {% endfor %}
+                    {% for item, value in revenue_data.salary_hourly.items %}
+                        <div class="flex flex-row border-b border-gray-400/10">
+                            <div class="basis-1/5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ item }}</div>
+                            <div class="basis-2/5"></div>
+                            <div class="basis-2/5 text-right">({{ value|floatformat:2|intcomma }})</div>
                         </div>
                     {% endfor %}
                 </div>
