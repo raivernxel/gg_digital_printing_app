@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% load humanize %}
+
+{% block title %}
+    User Income
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Item</button>
+    </form>
+{% endblock %}

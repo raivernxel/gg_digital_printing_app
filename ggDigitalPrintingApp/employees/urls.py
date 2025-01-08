@@ -5,5 +5,5 @@ app_name = 'employees'
 
 urlpatterns = [
      path('', views.insert_employees, name='employees'),
-     path('employee-log', views.my_login, name='employee-log'),
+     path('employee-log', views.employee_log, name='employee-log'),
 ]

@@ -28,8 +28,8 @@ class TransactionHistory(models.Model):
     transaction_type = models.ForeignKey(TransactionTypeMaintenance, on_delete=DO_NOTHING)
     transaction_date = models.DateField()
     transaction_platform = models.CharField(max_length=50, null=True)
-    transaction_number = models.CharField(max_length=100, null=True)
-    proof = models.ImageField(upload_to='transaction_history/', null=True)
+    transaction_number = models.CharField(max_length=100, null=True, blank=True)
+    proof = models.ImageField(upload_to='transaction_history/', null=True, blank=True)
     remarks = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:

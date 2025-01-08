@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from .models import TransactionHistory, ShareHolders
+from .models import TransactionHistory, ShareHolders, TransactionTypeMaintenance
 from orders.models import OrderInformation, SellingPlatform, OrderList
 from products.models import ProductInformation, ProductPrices
 from expenses.models import Expenses, MonthlyFees, Bills
@@ -12,6 +12,7 @@ from datetime import datetime, date
 from .services import Products
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
+from .forms import TranHistForm
 import json
 
 
@@ -230,6 +231,9 @@ def compute_total_revenue_and_expenses(revenue_data):
 def revenue(request):
     month = ''
     year = datetime.now().year
+    superuser = request.user.is_superuser
+    month_and_year = get_month_and_year()
+
     common = {
         'message': ''
     }
@@ -237,6 +241,8 @@ def revenue(request):
                     'total_expenses': 0}
 
     if request.method == 'POST':
+        save = request.POST.get('save-revenue')
+
         month = int(request.POST.get('month'))
         year = int(request.POST.get('year'))
         income(request, common, revenue_data)
@@ -249,18 +255,51 @@ def revenue(request):
 
         revenue_data['fund'] = five_percent
 
-    month_and_year = get_month_and_year()
+        if save == 'save':
+            tran_type = TransactionTypeMaintenance.objects.get(transaction_type='CREDIT')
+            shareholders = ShareHolders.objects.all()
+            month_text = month_and_year['months'][month]
+            next_month = datetime.strptime(f'{year}-{month}-1', "%Y-%m-%d") + relativedelta(months=1)
+
+            for sh in shareholders:
+                if sh.username != 'MaryCris' and sh.username != 'Raivern':
+                    revenue_per_user = (sh.share_percentage * revenue_data['revenue'])/100
+                    tran_hist_per_user = TransactionHistory.objects.filter(transaction_date=next_month, remarks=f'For the month of: {month_text}', 
+                                                                        transaction_type=tran_type, user_id= sh)
+
+                    if tran_hist_per_user:
+                        print('Update!')
+                        tran_hist_per_user[0].amount = revenue_per_user
+                        tran_hist_per_user[0].save()
+                    else:
+                        print('Add!')
+                        TransactionHistory.objects.create(amount=revenue_per_user, transaction_date=next_month,
+                                                        remarks=f'For the month of: {month_text}',user_id= sh, transaction_type=tran_type)
+
     month_and_year['cur_year'] = year
     month_and_year['cur_month'] = month
-
-    print('total_expenses: ', revenue_data['total_expenses'])
 
     return render(request, 'shareholders/revenue_page.html', {'month_and_year': month_and_year,
                                                               'revenue_menu': 'bg-gray-900 text-white',
                                                               'common': json.dumps(common),
-                                                              'revenue_data': revenue_data})
+                                                              'revenue_data': revenue_data,
+                                                              'superuser': superuser})
 
 
 def cash_out(request):
     return render(request, 'shareholders/cash_out.html')
 
+@login_required
+@role_required(allowed_roles=['superuser'])
+def add_tran_hist(request):
+    if request.method == 'POST':
+        form = TranHistForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('shareholders:add-tran-hist')
+        else:
+            print(form.errors)
+    else:
+        form = TranHistForm()
+
+    return render(request, 'shareholders/add_tran_hist.html', {'form': form})
