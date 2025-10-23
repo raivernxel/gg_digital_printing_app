@@ -70,15 +70,18 @@ def my_login(request):
     user_id = request.user.id
     employee_account = Employees.objects.get(employee_id=user_id)
 
-    days_list = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 23, 24, 25, 26, 27, 30, 31]
+    days_list = [1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,29,30]
 
     for day in days_list:
-        date_string = f'2024-12-{day} 00:00'
+        date_string = f'2025-09-{day} 00:00'
         date_format = "%Y-%m-%d %H:%M"
         accepted_date_format = "%Y-%m-%dT%H:%M"
         date_time = datetime.strptime(date_string, date_format).strftime(accepted_date_format)
 
-        EmployeeLogin.objects.create(employee_name=employee_account, login=date_time, hours=8)
+        employee_login = EmployeeLogin.objects.filter(employee_name=employee_account, login=date_time)
+
+        if not employee_login:
+            EmployeeLogin.objects.create(employee_name=employee_account, login=date_time, hours=8)
 
     return render(request, 'employees/employee_log.html')
 

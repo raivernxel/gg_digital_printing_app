@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Sum
+
 from .models import TransactionHistory, ShareHolders, TransactionTypeMaintenance
 from orders.models import OrderInformation, SellingPlatform, OrderList
 from products.models import ProductInformation, ProductPrices
@@ -13,6 +15,7 @@ from .services import Products
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 from .forms import TranHistForm
+
 import json
 
 
@@ -287,7 +290,21 @@ def revenue(request):
 
 
 def cash_out(request):
-    return render(request, 'shareholders/cash_out.html')
+    user_id = request.user.username
+
+    total_debit_amount = TransactionHistory.objects.filter(
+        user_id__username=user_id,
+        transaction_type__transaction_type= 'DEBIT'
+    ).aggregate(total=Sum('amount'))['total']
+
+    total_credit_amount = TransactionHistory.objects.filter(
+        user_id__username=user_id,
+        transaction_type__transaction_type= 'CREDIT'
+    ).aggregate(total=Sum('amount'))['total']
+
+    total_revenue = total_credit_amount - total_debit_amount
+
+    return render(request, 'shareholders/cash_out.html', {'total_revenue':total_revenue})
 
 @login_required
 @role_required(allowed_roles=['superuser'])

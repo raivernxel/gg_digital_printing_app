@@ -6,4 +6,28 @@
 {% endblock %}
 
 {% block content %}
+    <div class="m-10 mx-10 sm:mx-40 lg:mx-56 2xl:mx-96">
+        <div class="border-b border-gray-900/10 pb-12">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+                <div class="sm:col-span-1 p-5">
+                    <label for="cur_bal" class="block text-sm font-medium leading-6 text-gray-900">Current Balance</label>
+                    <div class="mt-2">
+                        <label for="username" class="block text-3xl font-medium leading-6 text-green-500">Php {{ total_revenue|floatformat:2|intcomma }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-10 mx-10 sm:mx-40 lg:mx-56 2xl:mx-96">
+        <div class="border-b border-gray-900/10 pb-12">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+                <div class="sm:col-span-1 p-5">
+                    <label for="cur_bal" class="block text-sm font-medium leading-6 text-gray-900">Withdraw Mode</label>
+                    <div class="mt-2">
+                        <label for="username" class="block text-3xl font-medium leading-6 text-green-500">Php {{ total_revenue|floatformat:2|intcomma }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

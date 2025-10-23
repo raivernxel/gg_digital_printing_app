@@ -9,15 +9,15 @@
     <div class="m-10 mx-10 sm:mx-40 lg:mx-56 2xl:mx-96">
         <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
             <div class="sm:col-span-1 p-5">
-                <label for="username" class="block text-3xl font-medium leading-6 text-gray-900">Current Balance</label>
+                <label for="cur_bal" class="block text-3xl font-medium leading-6 text-gray-900">Current Balance</label>
                 <div class="mt-2">
-                    <label for="username" class="block text-md font-medium leading-6 text-green-500">PHP {{ total_income|floatformat:2|intcomma }}</label>
+                    <label class="block text-md font-medium leading-6 text-green-500">PHP {{ total_income|floatformat:2|intcomma }}</label>
                 </div>
             </div>
             <div class="sm:col-span-1 p-5">
-                <label for="username" class="block text-3xl font-medium leading-6 text-gray-900">Total Earned</label>
+                <label for="tol_earned" class="block text-3xl font-medium leading-6 text-gray-900">Total Earned</label>
                 <div class="mt-2">
-                    <label for="username" class="block text-md font-medium leading-6 text-gray-600">Php {{ total_earned|floatformat:2|intcomma }}</label>
+                    <label class="block text-md font-medium leading-6 text-gray-600">Php {{ total_earned|floatformat:2|intcomma }}</label>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="sm:col-span-2">
             <div class="flex h-6 items-center">
-                <button type="submit" onclick="window.location.href='{% url 'shareholders:cash-out' %}'" name="action" value="save" class="w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cash Out</button>
+                <button type="submit" onclick="window.location.href='{% url 'shareholders:add-tran-hist' %}'" name="action" value="save" class="w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cash Out</button>
             </div>
         </div>
         <div class="sm:col-span-2">
